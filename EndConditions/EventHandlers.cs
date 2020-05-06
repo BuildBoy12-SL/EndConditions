@@ -56,7 +56,7 @@ namespace EndConditions
 					if (existsCheck) {
 						if (plugin.debug)
 							Log.Info("Check passed.");
-
+						ev.Allow = true;
 						try {
 							//Get the key that contains the name and escape conditions
 							var key = plugin.dict.FirstOrDefault(x => x.Value == values).Key;
@@ -67,25 +67,46 @@ namespace EndConditions
 							if (key.Contains("+classd")) {
 								if (escapedClassD) {
 									EndGame(ev, key);
+									return;
+								}
+								else {
+									if (plugin.debug)
+										Log.Info("Second check failed.");
 								}
 							}
 							else if (key.Contains("-classd")) {
 								if (!escapedClassD) {
 									EndGame(ev, key);
+									return;
+								}
+								else {
+									if (plugin.debug)
+										Log.Info("Second check failed.");
 								}
 							}
 							else if (key.Contains("+science")) {
 								if (escapedScientists) {
 									EndGame(ev, key);
+									return;
+								}
+								else {
+									if (plugin.debug)
+										Log.Info("Second check failed.");
 								}
 							}
 							else if (key.Contains("-science")) {
 								if (!escapedScientists) {
 									EndGame(ev, key);
+									return;
+								}
+								else {
+									if (plugin.debug)
+										Log.Info("Second check failed.");
 								}
 							}
 							else {
 								EndGame(ev, key);
+								return;
 							}
 						}
 						catch (Exception e) {
