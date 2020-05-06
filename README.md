@@ -1,5 +1,6 @@
 # EndConditions
 - Grants the ability to set custom round end conditions using [EXILED](https://github.com/galaxy119/EXILED/).
+- Requires the included Newtonsoft.Json.dll and YamlDotNet.dll as dependencies.
 
 ## EXILED Configs:
 | Config Option | Value Type | Default Value | Description |
