@@ -1,0 +1,80 @@
+﻿##Core Configs
+#Enables the plugin
+enabled: true
+# Prints a confirmation whenever a round ends with the specified conditions
+verbose: false
+# Prints misc. debug messages
+debug: false
+
+##Misc. Configs for additional setup
+#Uses base game round end conditions with your current setup, disable if you only want to use your configs
+default: false
+#Who should win if the warhead detonates. Set to "none" to disable this, otherwise use leading team names.
+warheadwinner: none
+#If tutorials should be ignored as normal, disable if you have plugins like SerpantsHand and set conditions accordingly.
+ignoretut: true
+
+#None of the following are case sensative, but it looks good
+endconditions:
+    # Name of the leading team
+    FacilityForces:
+        ##Condition name: Literally up to you, can be used as an identifier if you want
+        ##The ONLY rules for this is to NOT have two with the same name and to NOT have two sets that end with the same class set.
+        #Append "+science" or "+classd" to the name to check if at least one person has escaped from that team
+        #Append "-science" or "-classd" to the name to check if nobody has escaped from that team
+        #Note that this can create situations where the round will not end if there is one person alive. Make sure you cover all situations.
+        #This does not currently support appending multiple escape checks
+        - Default +science:
+            #Who wins together, using ClassNames from #resources in the EXILED discord
+            - NtfCommander
+            - NtfLieutenant        
+            - NtfCadet
+            - NtfScientist
+            - FacilityGuard
+            - Scientist
+    ChaosInsurgency:
+        - Default +classd:
+            - ChaosInsurgency
+            - ClassD
+        - Default2 +classd:
+            - ChaosInsurgency
+            - Scp173
+            - Scp106
+            - Scp049
+            - Scp079
+            - Scp096
+            - Scp0492
+            - Scp93953
+            - Scp93989
+    Anomalies:
+        - Default time:
+            - Scp173
+            - Scp106
+            - Scp049
+            - Scp079
+            - Scp096
+            - Scp0492
+            - Scp93953
+            - Scp93989
+            - ChaosInsurgency
+    Draw:
+        - Default time:
+            - ChaosInsurgency
+            - Scp173
+            - Scp106
+            - Scp049
+            - Scp079
+            - Scp096
+            - Scp0492
+            - Scp93953
+            - Scp93989
+        - Default 2:
+            - ClassD
+            - ChaosInsurgency
+        - Default 3:
+            - NtfCommander
+            - NtfLieutenant        
+            - NtfCadet
+            - NtfScientist
+            - FacilityGuard
+            - Scientist
