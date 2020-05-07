@@ -17,7 +17,6 @@ namespace EndConditions {
 		internal bool isGlobal;
 
 		internal bool enabled;
-		internal bool debug;
 		internal bool verbose;
 		internal JObject configs;
 		
@@ -38,7 +37,7 @@ namespace EndConditions {
 			Events.WaitingForPlayersEvent += EventHandlers.OnWaitingForPlayers;
 			Events.CheckEscapeEvent += EventHandlers.CheckEscape;
 			Events.CheckRoundEndEvent += EventHandlers.OnCheckRoundEnd;
-			Log.Info($"EndConditions Loaded.");
+			Log.Info("EndConditions Loaded.");
 		}
 
 		public override void OnDisable() {
@@ -79,7 +78,6 @@ namespace EndConditions {
 
 				//Get the base config options
 				enabled = json.SelectToken("enabled").Value<bool>();
-				debug = json.SelectToken("debug").Value<bool>();
 				verbose = json.SelectToken("verbose").Value<bool>();
 				configs = json.SelectToken("endconditions").Value<JObject>();
 				DefaultEndConditions = json.SelectToken("default").Value<bool>();

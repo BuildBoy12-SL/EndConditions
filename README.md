@@ -14,7 +14,6 @@ __All other config options are located inside the config.yml file that will gene
 |:------------------------:|:----------:|:-------------:|:------------------------------------------:|
 | `enabled` | bool | true | Enables/Disables the plugin. |
 | `verbose` | bool | false | Enables/Disables printing of confirmation messages when configured conditions are met. |
-| `debug` | bool | false | Enables/Disables the printing of various debug messages to console. |
 | `default` | bool | false | Enables/Disables the use of base game round end conditions. |
 | `warheadwinner` | string | none | Determines who will win when the warhead detonates using LeadingTeam names. |
 | `ignoretut` | bool | true | Determines if tutorials are calculated as a player. |

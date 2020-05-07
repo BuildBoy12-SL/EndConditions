@@ -3,8 +3,6 @@
 enabled: true
 # Prints a confirmation whenever a round ends with the specified conditions
 verbose: false
-# Prints misc. debug messages
-debug: false
 
 ##Misc. Configs for additional setup
 #Uses base game round end conditions with your current setup, disable if you only want to use your configs

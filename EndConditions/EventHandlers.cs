@@ -33,8 +33,7 @@ namespace EndConditions
 				ev.Allow = false;
 			}
 			//Check if the warhead has detonated && if the detonation winner is set
-			bool flag = Map.IsNukeDetonated && plugin.DetonationWinner != "none";
-			if (flag) { 
+			if (Map.IsNukeDetonated && plugin.DetonationWinner != "none") { 
 				EndGame(ev, plugin.DetonationWinner); 
 			}
 			else {
@@ -48,21 +47,16 @@ namespace EndConditions
 				if (plugin.IgnoreTut)
 					list.RemoveAll(item => item == "tutorial");
 				//Put all the lists from the core dictionary and check em
-				List<string> values = new List<string>();
 				foreach (var v in plugin.dict) {
-					values = v.Value;
 					//The actual check
-					bool existsCheck = !list.Except(values).Any();
+					bool existsCheck = !list.Except(v.Value).Any();
 					if (existsCheck) {
-						if (plugin.debug)
-							Log.Info("Check passed.");
+						Log.Debug("Check passed.");
 						ev.Allow = true;
 						try {
 							//Get the key that contains the name and escape conditions
-							var key = plugin.dict.FirstOrDefault(x => x.Value == values).Key;
-							if (plugin.debug)
-								Log.Info($"Using conditions from condition name: '{key}'");
-
+							var key = plugin.dict.FirstOrDefault(x => x.Value == v.Value).Key;
+							Log.Debug($"Using conditions from condition name: '{key}'");
 							//Check for escape conditions
 							if (key.Contains("+classd")) {
 								if (escapedClassD) {
@@ -70,8 +64,7 @@ namespace EndConditions
 									return;
 								}
 								else {
-									if (plugin.debug)
-										Log.Info("Second check failed.");
+									Log.Debug("Second check failed");
 								}
 							}
 							else if (key.Contains("-classd")) {
@@ -80,8 +73,7 @@ namespace EndConditions
 									return;
 								}
 								else {
-									if (plugin.debug)
-										Log.Info("Second check failed.");
+									Log.Debug("Second check failed");
 								}
 							}
 							else if (key.Contains("+science")) {
@@ -90,8 +82,7 @@ namespace EndConditions
 									return;
 								}
 								else {
-									if (plugin.debug)
-										Log.Info("Second check failed.");
+									Log.Debug("Second check failed");
 								}
 							}
 							else if (key.Contains("-science")) {
@@ -100,8 +91,7 @@ namespace EndConditions
 									return;
 								}
 								else {
-									if (plugin.debug)
-										Log.Info("Second check failed.");
+									Log.Debug("Second check failed");
 								}
 							}
 							else {
@@ -121,7 +111,7 @@ namespace EndConditions
 		public void EndGame(CheckRoundEndEvent ev, string team) {
 			ev.LeadingTeam = (RoundSummary.LeadingTeam)ConvertTeam(team);
 			ev.ForceEnd = true;
-			if (plugin.debug || plugin.verbose)
+			if (plugin.verbose)
 				Log.Info($"Force ending with {ev.LeadingTeam} as the lead team.");
 		}
 
@@ -136,8 +126,7 @@ namespace EndConditions
 			if (team != -1)
 				return team;
 			else {
-				if (plugin.debug)
-					Log.Warn($"Could not parse {arg} into a team, returning as a draw.");
+				Log.Debug($"Could not parse {arg} into a team, returning as a draw.");
 
 				return 3;
 			}
