@@ -49,8 +49,7 @@ namespace EndConditions
 				//Put all the lists from the core dictionary and check em
 				foreach (var v in plugin.dict) {
 					//The actual check
-					bool existsCheck = !list.Except(v.Value).Any();
-					if (existsCheck) {
+					if (!list.Except(v.Value).Any()) {
 						Log.Debug("Check passed.");
 						ev.Allow = true;
 						try {
