@@ -34,15 +34,11 @@ namespace EndConditions {
 
 			EventHandlers = new EventHandlers(this);
 
-			Events.WaitingForPlayersEvent += EventHandlers.OnWaitingForPlayers;
-			Events.CheckEscapeEvent += EventHandlers.CheckEscape;
 			Events.CheckRoundEndEvent += EventHandlers.OnCheckRoundEnd;
 			Log.Info("EndConditions Loaded.");
 		}
 
 		public override void OnDisable() {
-			Events.WaitingForPlayersEvent -= EventHandlers.OnWaitingForPlayers;
-			Events.CheckEscapeEvent -= EventHandlers.CheckEscape;
 			Events.CheckRoundEndEvent -= EventHandlers.OnCheckRoundEnd;
 
 			EventHandlers = null;

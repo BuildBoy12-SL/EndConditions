@@ -11,23 +11,6 @@ namespace EndConditions
 		public Plugin plugin;
 		public EventHandlers(Plugin plugin) => this.plugin = plugin;
 
-		public bool escapedClassD = false;
-		public bool escapedScientists = false;
-
-		//Reset of values
-		public void OnWaitingForPlayers() {
-			escapedClassD = false;
-			escapedScientists = false;
-		}
-
-		//Hold for escape condition checks
-		public void CheckEscape(ref CheckEscapeEvent ev) {
-			if (ev.Player.GetRole() == RoleType.ClassD)
-				escapedClassD = true;
-			else if (ev.Player.GetRole() == RoleType.Scientist)
-				escapedScientists = true;
-		}
-
 		public void OnCheckRoundEnd(ref CheckRoundEndEvent ev) {
 			if (!plugin.DefaultEndConditions) {
 				ev.Allow = false;
@@ -58,7 +41,7 @@ namespace EndConditions
 							Log.Debug($"Using conditions from condition name: '{key}'");
 							//Check for escape conditions
 							if (key.Contains("+classd")) {
-								if (escapedClassD) {
+								if (RoundSummary.escaped_ds != 0) {
 									EndGame(ev, key);
 									return;
 								}
@@ -67,7 +50,7 @@ namespace EndConditions
 								}
 							}
 							else if (key.Contains("-classd")) {
-								if (!escapedClassD) {
+								if (RoundSummary.escaped_ds == 0) {
 									EndGame(ev, key);
 									return;
 								}
@@ -76,7 +59,7 @@ namespace EndConditions
 								}
 							}
 							else if (key.Contains("+science")) {
-								if (escapedScientists) {
+								if (RoundSummary.escaped_scientists != 0) {
 									EndGame(ev, key);
 									return;
 								}
@@ -85,7 +68,7 @@ namespace EndConditions
 								}
 							}
 							else if (key.Contains("-science")) {
-								if (!escapedScientists) {
+								if (RoundSummary.escaped_scientists == 0) {
 									EndGame(ev, key);
 									return;
 								}
