@@ -42,3 +42,5 @@ __All other config options are located inside the config.yml file that will gene
 - Scientist
 - ClassD
 - Tutorial
+
+Credit to Killers0992#8021 for inspiration of configs
