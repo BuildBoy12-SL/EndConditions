@@ -8,8 +8,10 @@ using EXILED;
 using Newtonsoft.Json.Linq;
 using YamlDotNet.Serialization;
 
-namespace EndConditions {
-	public class Plugin : EXILED.Plugin {
+namespace EndConditions 
+{
+	public class Plugin : EXILED.Plugin 
+	{
 
 		public EventHandlers EventHandlers;
 		public Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
@@ -27,20 +29,20 @@ namespace EndConditions {
 		public static string PluginDirectory = Path.Combine(PluginManager.PluginsDirectory, "EndConditions");
 		public static string FileDirectory = Path.Combine(PluginDirectory, "config.yml");
 
-		public override void OnEnable() {
+		public override void OnEnable() 
+		{
 			ReloadConfigs();
 			if (!enabled)
 				return;
 
 			EventHandlers = new EventHandlers(this);
-
 			Events.CheckRoundEndEvent += EventHandlers.OnCheckRoundEnd;
 			Log.Info("EndConditions Loaded.");
 		}
 
-		public override void OnDisable() {
+		public override void OnDisable() 
+		{
 			Events.CheckRoundEndEvent -= EventHandlers.OnCheckRoundEnd;
-
 			EventHandlers = null;
 		}
 
@@ -48,8 +50,10 @@ namespace EndConditions {
 
 		public override string getName => "EndConditions";
 
-		public void ReloadConfigs() {
-			try {
+		public void ReloadConfigs() 
+		{
+			try 
+			{
 				//Is this thing global?
 				isGlobal = Config.GetBool("ec_global", true);
 				string path = isGlobal ? FileDirectory : Path.Combine(PluginDirectory, ServerConsole.Port.ToString(), "config.yml");
@@ -57,7 +61,8 @@ namespace EndConditions {
 				if (!Directory.Exists(PluginDirectory))
 					Directory.CreateDirectory(PluginDirectory);
 				//If it doesn't exist, make it so it does
-				if (!isGlobal) {
+				if (!isGlobal) 
+				{
 					if (!Directory.Exists(Path.Combine(PluginDirectory, ServerConsole.Port.ToString())))
 						Directory.CreateDirectory(Path.Combine(PluginDirectory, ServerConsole.Port.ToString()));
 				}
@@ -82,11 +87,14 @@ namespace EndConditions {
 
 				//Get the EndConditions
 				JProperty[] groups = configs.Properties().ToArray();
-				foreach (JProperty group in groups) {
-					foreach (JObject bundle in group.Value.Children()) {
+				foreach (JProperty group in groups) 
+				{
+					foreach (JObject bundle in group.Value.Children()) 
+					{
 						List<string> hold = new List<string>();
 						JProperty minibundle = bundle.Properties().First();
-						foreach (string classes in minibundle.Value as JArray) {
+						foreach (string classes in minibundle.Value as JArray) 
+						{
 							hold.Add(classes.ToLower());
 						}
 						dict.Add($"{group.Name.ToLower()}-{minibundle.Name.ToLower()}", hold);
@@ -94,7 +102,8 @@ namespace EndConditions {
 				}
 				Log.Info("EndConditions Configs loaded.");
 			}
-			catch (Exception e) {
+			catch (Exception e) 
+			{
 				Log.Error($"Error loading configs for EndConditions: {e}");
 			}				
 		}
