@@ -1,18 +1,4 @@
-﻿##Core Configs
-#Enables the plugin
-enabled: true
-# Prints a confirmation whenever a round ends with the specified conditions
-verbose: false
-
-##Misc. Configs for additional setup
-#Uses base game round end conditions with your current setup, disable if you only want to use your configs
-default: false
-#Who should win if the warhead detonates. Set to "none" to disable this, otherwise use leading team names.
-warheadwinner: none
-#If tutorials should be ignored as normal, disable if you have plugins like SerpantsHand and set conditions accordingly.
-ignoretut: true
-
-#None of the following are case sensative, but it looks good
+﻿#None of the following are case sensative, but it looks good
 endconditions:
     # Name of the leading team
     FacilityForces:

@@ -1,52 +1,54 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EXILED;
-using EXILED.Extensions;
+using Exiled.API.Features;
+using Exiled.Events.EventArgs;
 
 namespace EndConditions
 {
-	public class EventHandlers
+	public class Handler
 	{
 		public Plugin plugin;
-		public EventHandlers(Plugin plugin) => this.plugin = plugin;
+		public Handler(Plugin plugin) => this.plugin = plugin;
 
-		public void OnCheckRoundEnd(ref CheckRoundEndEvent ev) 
+		public static Dictionary<string, List<string>> escapeConditions = new Dictionary<string, List<string>>();
+		public void OnCheckRoundEnd(EndingRoundEventArgs ev) 
 		{
-			if (!plugin.DefaultEndConditions) 
+			if (!Plugin.ConfigRef.Config.AllowDefaultEndConditions) 
 			{
-				ev.Allow = false;
+				ev.IsAllowed = false;
 			}
 			//Check if the warhead has detonated && if the detonation winner is set
-			if (Map.IsNukeDetonated && plugin.DetonationWinner != "none") 
+			if (Warhead.IsDetonated && Plugin.ConfigRef.Config.DetonationWinner != "none") 
 			{ 
-				EndGame(ev, plugin.DetonationWinner); 
+				EndGame(ev, Plugin.ConfigRef.Config.DetonationWinner); 
 			}
 			else 
 			{
 				//Shove all alive roles into the list
 				List<string> list = new List<string>();
-				foreach (ReferenceHub hub in Player.GetHubs()) 
+				foreach (Player hub in Player.List) 
 				{
-					if(hub.GetRole() != RoleType.Spectator)
-						list.Add(hub.GetRole().ToString().ToLower());
+					if(hub.Role != RoleType.Spectator)
+						list.Add(hub.Role.ToString().ToLower());
 				}				
 				//If ignoretut, do the thing.
-				if (plugin.IgnoreTut)
+				if (Plugin.ConfigRef.Config.IgnoreTutorials)
 					list.RemoveAll(item => item == "tutorial");
 				//Put all the lists from the core dictionary and check em
-				foreach (var v in plugin.dict) 
+				foreach (KeyValuePair<string, List<string>> condition in escapeConditions) 
 				{
 					//The actual check
-					if (!list.Except(v.Value).Any()) 
+					if (!list.Except(condition.Value).Any()) 
 					{
-						Log.Debug("Check passed.");
-						ev.Allow = true;
+						if (Plugin.ConfigRef.Config.AllowDebug) 
+							Log.Debug("Check passed.");
 						try 
 						{
 							//Get the key that contains the name and escape conditions
-							var key = plugin.dict.FirstOrDefault(x => x.Value == v.Value).Key;
-							Log.Debug($"Using conditions from condition name: '{key}'");
+							string key = escapeConditions.FirstOrDefault(x => x.Value == condition.Value).Key;
+							if (Plugin.ConfigRef.Config.AllowDebug) 
+								Log.Debug($"Using conditions from condition name: '{key}'");
 							//Check for escape conditions
 							if (key.Contains("+classd")) 
 							{
@@ -57,7 +59,8 @@ namespace EndConditions
 								}
 								else 
 								{
-									Log.Debug("Second check failed");
+									if (Plugin.ConfigRef.Config.AllowDebug) 
+										Log.Debug("Second check failed");
 								}
 							}
 							else if (key.Contains("-classd")) 
@@ -69,7 +72,8 @@ namespace EndConditions
 								}
 								else 
 								{
-									Log.Debug("Second check failed");
+									if (Plugin.ConfigRef.Config.AllowDebug) 
+										Log.Debug("Second check failed");
 								}
 							}
 							else if (key.Contains("+science")) 
@@ -81,7 +85,8 @@ namespace EndConditions
 								}
 								else 
 								{
-									Log.Debug("Second check failed");
+									if (Plugin.ConfigRef.Config.AllowDebug) 
+										Log.Debug("Second check failed");
 								}
 							}
 							else if (key.Contains("-science")) 
@@ -93,7 +98,8 @@ namespace EndConditions
 								}
 								else 
 								{
-									Log.Debug("Second check failed");
+									if (Plugin.ConfigRef.Config.AllowDebug) 
+										Log.Debug("Second check failed");
 								}
 							}
 							else 
@@ -112,15 +118,16 @@ namespace EndConditions
 		}
 
 		//Central round end function
-		public void EndGame(CheckRoundEndEvent ev, string team) 
+		public void EndGame(EndingRoundEventArgs ev, string team) 
 		{
+			ev.IsAllowed = true;
 			ev.LeadingTeam = (RoundSummary.LeadingTeam)ConvertTeam(team);
-			ev.ForceEnd = true;
-			if (plugin.verbose)
+			ev.IsRoundEnded = true;
+			if (Plugin.ConfigRef.Config.AllowVerbose)
 				Log.Info($"Force ending with {ev.LeadingTeam} as the lead team.");
 		}
 
-		//Middle man to convert string into RoundSummary.LeadingTeam to account for dictionary keys. Yes I know Enum.Parse exists, no it wouldn't work in this case. I think.
+		//Middle man to convert string into RoundSummary.LeadingTeam to account for dictionary keys.
 		public int ConvertTeam(string arg) 
 		{
 			var team = arg.ToLower().StartsWith("facilityforces") ? 0
@@ -131,7 +138,8 @@ namespace EndConditions
 
 			if (team == -1)
             {
-				Log.Debug($"Could not parse {arg} into a team, returning as a draw.");
+				if (Plugin.ConfigRef.Config.AllowDebug) 
+					Log.Debug($"Could not parse {arg} into a team, returning as a draw.");
 				return 3;
 			}
 			return team;
