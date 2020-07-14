@@ -1,22 +1,17 @@
 # EndConditions
 - Grants the ability to set custom round end conditions using [EXILED](https://github.com/galaxy119/EXILED/).
-- Requires the included Newtonsoft.Json.dll and YamlDotNet.dll as dependencies.
+- Requires the included Newtonsoft.Json.dll as a dependency.
 
 ## EXILED Configs:
 | Config Option | Value Type | Default Value | Description |
 |:------------------------:|:----------:|:-------------:|:------------------------------------------:|
-| `ec_global` | bool | true | Determines if the server reads from the central config file, otherwise it makes a new one. |
-
-__All other config options are located inside the config.yml file that will generate when the plugin is run for the first time__
-
-## EndConditions Configs:
-| Config Option | Value Type | Default Value | Description |
-|:------------------------:|:----------:|:-------------:|:------------------------------------------:|
-| `enabled` | bool | true | Enables/Disables the plugin. |
-| `verbose` | bool | false | Enables/Disables printing of confirmation messages when configured conditions are met. |
-| `default` | bool | false | Enables/Disables the use of base game round end conditions. |
-| `warheadwinner` | string | none | Determines who will win when the warhead detonates using LeadingTeam names. |
-| `ignoretut` | bool | true | Determines if tutorials are calculated as a player. |
+| `IsEnabled` | bool | true | Enables/Disables the plugin. |
+| `UsesGlobalConfig` | bool | true | Determines if the server reads from the central config file, otherwise it makes a new one. |
+| `AllowVerbose` | bool | false | Enables/Disables printing of confirmation messages when configured conditions are met. |
+| `AllowDebug` | bool | false | Enables/Disables printing of various debug messages, requires this and Exiled's debug to be enabled. |
+| `AllowDefaultEndConditions` | bool | false | Enables/Disables the use of base game round end conditions. |
+| `DetonationWinner` | string | none | Determines who will win when the warhead detonates using LeadingTeam names. |
+| `IgnoreTutorials` | bool | true | Determines if tutorials are calculated as a player. |
 
 ## Leading team names:
 - FacilityForces
@@ -42,5 +37,3 @@ __All other config options are located inside the config.yml file that will gene
 - Scientist
 - ClassD
 - Tutorial
-
-Credit to Killers0992#8021 for inspiration of configs
