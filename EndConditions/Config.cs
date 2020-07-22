@@ -21,7 +21,7 @@
 		public bool AllowVerbose { get; set; } = false;
 
 		/// <summary>
-		/// If the debug messages should be sent. Disabled by default due to spam resulting in low visibility of other plugin debug messages.
+		/// If the debug messages should be sent.
 		/// </summary>
 		[Description("Enable if the plugin should send debug messages.")]
 		public bool AllowDebug { get; set; } = false;
