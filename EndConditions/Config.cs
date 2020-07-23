@@ -1,8 +1,8 @@
-﻿namespace EndConditions
-{
-    using Exiled.API.Interfaces;
-    using System.ComponentModel;
+﻿using Exiled.API.Interfaces;
+using System.ComponentModel;
 
+namespace EndConditions
+{
     public sealed class Config : IConfig
     {
         [Description("Enable if EndConditions should be loaded.")]
@@ -21,7 +21,7 @@
 		public bool AllowVerbose { get; set; } = false;
 
 		/// <summary>
-		/// If the debug messages should be sent.
+		/// If the debug messages should be sent. Disabled by default due to spam resulting in low visibility of other plugin debug messages.
 		/// </summary>
 		[Description("Enable if the plugin should send debug messages.")]
 		public bool AllowDebug { get; set; } = false;

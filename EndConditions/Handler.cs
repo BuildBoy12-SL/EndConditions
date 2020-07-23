@@ -11,17 +11,18 @@ namespace EndConditions
 		public Plugin plugin;
 		public Handler(Plugin plugin) => this.plugin = plugin;
 
+		public bool AllowDebug => plugin.Config.AllowDebug;
 		public static Dictionary<string, List<string>> escapeConditions = new Dictionary<string, List<string>>();
 		public void OnCheckRoundEnd(EndingRoundEventArgs ev) 
 		{
-			if (!Plugin.ConfigRef.Config.AllowDefaultEndConditions) 
+			if (!plugin.Config.AllowDefaultEndConditions) 
 			{
 				ev.IsAllowed = false;
 			}
 			//Check if the warhead has detonated && if the detonation winner is set
-			if (Warhead.IsDetonated && Plugin.ConfigRef.Config.DetonationWinner != "none") 
+			if (Warhead.IsDetonated && plugin.Config.DetonationWinner != "none") 
 			{ 
-				EndGame(ev, Plugin.ConfigRef.Config.DetonationWinner); 
+				EndGame(ev, plugin.Config.DetonationWinner); 
 			}
 			else 
 			{
@@ -33,7 +34,7 @@ namespace EndConditions
 						list.Add(hub.Role.ToString().ToLower());
 				}				
 				//If ignoretut, do the thing.
-				if (Plugin.ConfigRef.Config.IgnoreTutorials)
+				if (plugin.Config.IgnoreTutorials)
 					list.RemoveAll(item => item == "tutorial");
 				//Put all the lists from the core dictionary and check em
 				foreach (KeyValuePair<string, List<string>> condition in escapeConditions) 
@@ -41,14 +42,12 @@ namespace EndConditions
 					//The actual check
 					if (!list.Except(condition.Value).Any()) 
 					{
-						if (Plugin.ConfigRef.Config.AllowDebug) 
-							Log.Debug("Check passed.");
+						Log.Debug("Check passed.", AllowDebug);
 						try 
 						{
 							//Get the key that contains the name and escape conditions
 							string key = escapeConditions.FirstOrDefault(x => x.Value == condition.Value).Key;
-							if (Plugin.ConfigRef.Config.AllowDebug) 
-								Log.Debug($"Using conditions from condition name: '{key}'");
+							Log.Debug($"Using conditions from condition name: '{key}'", AllowDebug);
 							//Check for escape conditions
 							if (key.Contains("+classd")) 
 							{
@@ -59,8 +58,7 @@ namespace EndConditions
 								}
 								else 
 								{
-									if (Plugin.ConfigRef.Config.AllowDebug) 
-										Log.Debug("Second check failed");
+									Log.Debug("Second check failed");
 								}
 							}
 							else if (key.Contains("-classd")) 
@@ -72,8 +70,7 @@ namespace EndConditions
 								}
 								else 
 								{
-									if (Plugin.ConfigRef.Config.AllowDebug) 
-										Log.Debug("Second check failed");
+									Log.Debug("Second check failed", AllowDebug);
 								}
 							}
 							else if (key.Contains("+science")) 
@@ -85,8 +82,7 @@ namespace EndConditions
 								}
 								else 
 								{
-									if (Plugin.ConfigRef.Config.AllowDebug) 
-										Log.Debug("Second check failed");
+									Log.Debug("Second check failed", AllowDebug);
 								}
 							}
 							else if (key.Contains("-science")) 
@@ -98,8 +94,7 @@ namespace EndConditions
 								}
 								else 
 								{
-									if (Plugin.ConfigRef.Config.AllowDebug) 
-										Log.Debug("Second check failed");
+									Log.Debug("Second check failed", AllowDebug);
 								}
 							}
 							else 
@@ -123,7 +118,7 @@ namespace EndConditions
 			ev.IsAllowed = true;
 			ev.LeadingTeam = (RoundSummary.LeadingTeam)ConvertTeam(team);
 			ev.IsRoundEnded = true;
-			if (Plugin.ConfigRef.Config.AllowVerbose)
+			if (plugin.Config.AllowVerbose)
 				Log.Info($"Force ending with {ev.LeadingTeam} as the lead team.");
 		}
 
@@ -138,8 +133,7 @@ namespace EndConditions
 
 			if (team == -1)
             {
-				if (Plugin.ConfigRef.Config.AllowDebug) 
-					Log.Debug($"Could not parse {arg} into a team, returning as a draw.");
+				Log.Debug($"Could not parse {arg} into a team, returning as a draw.", AllowDebug);
 				return 3;
 			}
 			return team;

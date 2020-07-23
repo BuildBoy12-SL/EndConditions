@@ -1,22 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using EndConditions.Properties;
+using Exiled.API.Features;
+using Newtonsoft.Json.Linq;
+using YamlDotNet.Serialization;
+
 namespace EndConditions
 {
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
-    using System.Linq;
-    using System.Text;
-    using EndConditions.Properties;
-    using Exiled.API.Features;
-    using Newtonsoft.Json.Linq;
-    using YamlDotNet.Serialization;
-    
     public class Plugin : Plugin<Config>
 	{
 		public static string PluginDirectory = Path.Combine(Paths.Plugins, "EndConditions");
 		public static string FileDirectory = Path.Combine(PluginDirectory, "config.yml");
-		private static readonly Lazy<Plugin> LazyInstance = new Lazy<Plugin>(() => new Plugin());
-		private Plugin() { }
-		public static Plugin ConfigRef => LazyInstance.Value;
 		private Handler handler;
 
 		public override void OnEnabled() 
@@ -34,7 +31,10 @@ namespace EndConditions
 			handler = null;
 		}
 
-		public void LoadConditions()
+        public override string Author => "Build";
+        public override string Name => "EndConditions";
+
+        public void LoadConditions()
 		{
 			try
 			{
