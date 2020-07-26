@@ -34,34 +34,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>D:\SCP Servers\Scopophobia Server - Beta\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\..\..\Personal Plugins\pro079-master\pro079\bin\Debug\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp_publicized">
-      <HintPath>D:\SCP Servers\Scopophobia Server - Beta\SCPSL_Data\Managed\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.API">
-      <HintPath>..\..\..\Exiled-2.0\EXILED-PTB\Plugins\dependencies\Exiled.API.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Events">
-      <HintPath>..\..\..\Exiled-2.0\EXILED-PTB\Plugins\Exiled.Events.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Loader">
-      <HintPath>..\..\..\Exiled-2.0\EXILED-PTB\Exiled.Loader.dll</HintPath>
+      <HintPath>..\..\..\..\Personal Plugins\pro079-master\pro079\bin\Debug\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
       <HintPath>D:\Source Codes\References\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED-PTB\Plugins\dependencies\Newtonsoft.Json.dll</HintPath>
+      <HintPath>C:\Users\jwbra\AppData\Roaming\EXILED\Plugins\dependencies\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>D:\Source Codes\References\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="YamlDotNet, Version=8.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED-PTB\Plugins\dependencies\YamlDotNet.dll</HintPath>
+    <Reference Include="YamlDotNet">
+      <HintPath>bin\Debug\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +73,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.yml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EXILED">
+      <Version>2.0.5</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

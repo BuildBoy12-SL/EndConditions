@@ -58,7 +58,7 @@ namespace EndConditions
 								}
 								else 
 								{
-									Log.Debug("Second check failed");
+									Log.Debug("+C Second check failed" + " " + key, AllowDebug);
 								}
 							}
 							else if (key.Contains("-classd")) 
@@ -70,7 +70,7 @@ namespace EndConditions
 								}
 								else 
 								{
-									Log.Debug("Second check failed", AllowDebug);
+									Log.Debug("-C Second check failed" + " " + key, AllowDebug);
 								}
 							}
 							else if (key.Contains("+science")) 
@@ -82,7 +82,7 @@ namespace EndConditions
 								}
 								else 
 								{
-									Log.Debug("Second check failed", AllowDebug);
+									Log.Debug("+S Second check failed" + " " + key, AllowDebug);
 								}
 							}
 							else if (key.Contains("-science")) 
@@ -94,7 +94,7 @@ namespace EndConditions
 								}
 								else 
 								{
-									Log.Debug("Second check failed", AllowDebug);
+									Log.Debug("-S Second check failed" + " " + key, AllowDebug);
 								}
 							}
 							else 
@@ -114,10 +114,10 @@ namespace EndConditions
 
 		//Central round end function
 		public void EndGame(EndingRoundEventArgs ev, string team) 
-		{
-			ev.IsAllowed = true;
+		{			
 			ev.LeadingTeam = (RoundSummary.LeadingTeam)ConvertTeam(team);
 			ev.IsRoundEnded = true;
+			ev.IsAllowed = true;
 			if (plugin.Config.AllowVerbose)
 				Log.Info($"Force ending with {ev.LeadingTeam} as the lead team.");
 		}
