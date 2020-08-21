@@ -3,11 +3,12 @@ endconditions:
     # Name of the leading team
     FacilityForces:
         ##Condition name: Literally up to you, can be used as an identifier if you want
-        ##The ONLY rule for this is to NOT have two with the same name that are under the same leading team.
+        ##The ONLY rules for this is to NOT have two with the same name and to NOT have two sets that end with the same class set.
         #Append "+science" or "+classd" to the name to check if at least one person has escaped from that team
         #Append "-science" or "-classd" to the name to check if nobody has escaped from that team
         #Note that this can create situations where the round will not end if there is one person alive. Make sure you cover all situations.
-        - Default 1 +science:
+        #This does not currently support appending multiple escape checks
+        - Default +science:
             #Who wins together, using ClassNames from #resources in the EXILED discord
             - NtfCommander
             - NtfLieutenant        
@@ -16,10 +17,10 @@ endconditions:
             - FacilityGuard
             - Scientist
     ChaosInsurgency:
-        - Default 1 +classd:
+        - Default +classd:
             - ChaosInsurgency
             - ClassD
-        - Default 2 +classd:
+        - Default2 +classd:
             - ChaosInsurgency
             - Scp173
             - Scp106
@@ -30,7 +31,7 @@ endconditions:
             - Scp93953
             - Scp93989
     Anomalies:
-        - Default 1 -classd:
+        - Default time:
             - Scp173
             - Scp106
             - Scp049
@@ -41,7 +42,7 @@ endconditions:
             - Scp93989
             - ChaosInsurgency
     Draw:
-        - Default 1:
+        - Default time:
             - ChaosInsurgency
             - Scp173
             - Scp106

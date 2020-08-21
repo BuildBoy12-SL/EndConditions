@@ -12,8 +12,8 @@ namespace EndConditions
 {
     public class Plugin : Plugin<Config>
 	{
-		private static readonly string PluginDirectory = Path.Combine(Paths.Plugins, "EndConditions");
-		private static readonly string FileDirectory = Path.Combine(PluginDirectory, "config.yml");
+		public static string PluginDirectory = Path.Combine(Paths.Plugins, "EndConditions");
+		public static string FileDirectory = Path.Combine(PluginDirectory, "config.yml");
 		private Handler handler;
 
 		public override void OnEnabled() 
@@ -34,7 +34,7 @@ namespace EndConditions
         public override string Author => "Build";
         public override string Name => "EndConditions";
 
-        private void LoadConditions()
+        public void LoadConditions()
 		{
 			try
 			{
@@ -65,9 +65,13 @@ namespace EndConditions
 				{
 					foreach (JObject bundle in group.Value.Children())
 					{
+						List<string> hold = new List<string>();
 						JProperty minibundle = bundle.Properties().First();
-						IEnumerable<string> hold = from string classes in minibundle.Value as JArray select classes.ToLower();
-						Handler.EndConditions.Add($"{group.Name.ToLower()}-{minibundle.Name.ToLower()}", hold);
+						foreach (string classes in minibundle.Value as JArray)
+						{
+							hold.Add(classes.ToLower());
+						}
+						Handler.escapeConditions.Add($"{group.Name.ToLower()}-{minibundle.Name.ToLower()}", hold);
 					}
 				}
 				Log.Info("EndConditions Configs loaded.");
