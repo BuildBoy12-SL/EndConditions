@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 
@@ -11,7 +12,7 @@ namespace EndConditions
 		public Plugin plugin;
 		public Handler(Plugin plugin) => this.plugin = plugin;
 
-		public bool AllowDebug => plugin.Config.AllowDebug;
+		private bool AllowDebug => plugin.Config.AllowDebug;
 		public static Dictionary<string, List<string>> escapeConditions = new Dictionary<string, List<string>>();
 		public void OnCheckRoundEnd(EndingRoundEventArgs ev) 
 		{
@@ -113,9 +114,9 @@ namespace EndConditions
 		}
 
 		//Central round end function
-		public void EndGame(EndingRoundEventArgs ev, string team) 
+		private void EndGame(EndingRoundEventArgs ev, string team) 
 		{			
-			ev.LeadingTeam = (RoundSummary.LeadingTeam)ConvertTeam(team);
+			ev.LeadingTeam = (LeadingTeam)ConvertTeam(team);
 			ev.IsRoundEnded = true;
 			ev.IsAllowed = true;
 			if (plugin.Config.AllowVerbose)
@@ -123,7 +124,7 @@ namespace EndConditions
 		}
 
 		//Middle man to convert string into RoundSummary.LeadingTeam to account for dictionary keys.
-		public int ConvertTeam(string arg) 
+		private int ConvertTeam(string arg) 
 		{
 			var team = arg.ToLower().StartsWith("facilityforces") ? 0
 					 : arg.ToLower().StartsWith("chaosinsurgency") ? 1

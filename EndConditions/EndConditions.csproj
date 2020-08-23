@@ -33,8 +33,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\mnt\HDD\Source Codes\Personal Plugins\1 - EXILED 2.0 Ready Plugins\EndConditions\EndConditions\bin\Release\Assembly-CSharp_publicized.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\Personal Plugins\pro079-master\pro079\bin\Debug\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\mnt\HDD\Source Codes\Personal Plugins\1 - EXILED 2.0 Ready Plugins\EndConditions\EndConditions\bin\Release\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp_publicized">
       <HintPath>..\..\..\..\Personal Plugins\pro079-master\pro079\bin\Debug\Assembly-CSharp_publicized.dll</HintPath>
@@ -42,16 +48,25 @@
     <Reference Include="Mirror">
       <HintPath>D:\Source Codes\References\Mirror.dll</HintPath>
     </Reference>
+    <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\mnt\HDD\Source Codes\Personal Plugins\1 - EXILED 2.0 Ready Plugins\EndConditions\EndConditions\bin\Release\Mirror.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\..\..\..\..\mnt\HDD\Source Codes\Personal Plugins\1 - EXILED 2.0 Ready Plugins\EndConditions\EndConditions\bin\Release\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\jwbra\AppData\Roaming\EXILED\Plugins\dependencies\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>D:\Source Codes\References\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\mnt\HDD\Source Codes\Personal Plugins\1 - EXILED 2.0 Ready Plugins\EndConditions\EndConditions\bin\Release\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="YamlDotNet">
       <HintPath>bin\Debug\YamlDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="YamlDotNet, Version=8.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e">
+      <HintPath>..\..\..\..\..\mnt\HDD\Source Codes\Personal Plugins\1 - EXILED 2.0 Ready Plugins\EndConditions\EndConditions\bin\Release\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -76,7 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EXILED">
-      <Version>2.0.5</Version>
+      <Version>2.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
