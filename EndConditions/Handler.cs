@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Exiled.API.Enums;
 
 namespace EndConditions
 {
@@ -13,8 +14,8 @@ namespace EndConditions
 
 		private bool AllowDebug => plugin.Config.AllowDebug;
 
-		internal static Dictionary<string, IEnumerable<string>> EndConditions
-			= new Dictionary<string, IEnumerable<string>>();
+		internal static Dictionary<string, List<string>> EndConditions
+			= new Dictionary<string, List<string>>();
 
 		private readonly Dictionary<string, bool> EscAdditions = new Dictionary<string, bool>
 		{
@@ -29,6 +30,7 @@ namespace EndConditions
 			if (!plugin.Config.AllowDefaultEndConditions) 
 			{
 				ev.IsAllowed = false;
+				ev.IsRoundEnded = false;
 			}
 			//Check if the warhead has detonated && if the detonation winner is set
 			if (Warhead.IsDetonated && plugin.Config.DetonationWinner != "none") 
@@ -38,7 +40,18 @@ namespace EndConditions
 			else 
 			{
 				//Shove all alive roles into the list
-				List<string> list = (from hub in Player.List where hub.Role != RoleType.Spectator select hub.Role.ToString().ToLower()).ToList();
+				List<string> list = new List<string>();
+				foreach (Player ply in Player.List)
+				{
+					if (ply.Role.Equals(RoleType.Spectator)) continue;
+					if (ply.ReferenceHub.serverRoles.GetUncoloredRoleString().Contains("SCP-035"))
+					{
+						list.Add("scp-035");
+						continue;
+					}
+
+					list.Add(ply.Role.ToString().ToLower());
+				}
 				//If ignoretut, do the thing.
 				if (plugin.Config.IgnoreTutorials)
 					list.RemoveAll(item => item == "tutorial");
@@ -54,11 +67,15 @@ namespace EndConditions
 						//Check for escape conditions
 						string[] splitKey = key.Split(' ');
 						IEnumerable<string> conds = splitKey.Where(str => EscAdditions.Keys.Contains(str));
-
+						foreach (string cond in conds)
+						{
+							Log.Debug($"Condition: {cond}, Result: {EscAdditions[cond]}", AllowDebug);
+						}
+						
 						if (conds.Any(str => !EscAdditions[str]))
 						{
 							Log.Debug("Escape conditions check failed:" + " " + key, AllowDebug);
-							return;
+							continue;
 						}
 
 						EndGame(ev, key);
@@ -74,7 +91,7 @@ namespace EndConditions
 		//Central round end function
 		private void EndGame(EndingRoundEventArgs ev, string team) 
 		{			
-			ev.LeadingTeam = (RoundSummary.LeadingTeam)ConvertTeam(team);
+			ev.LeadingTeam = (LeadingTeam)ConvertTeam(team);
 			ev.IsRoundEnded = true;
 			ev.IsAllowed = true;
 			if (plugin.Config.AllowVerbose)
