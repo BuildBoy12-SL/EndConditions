@@ -46,7 +46,7 @@ namespace EndConditions
 					if (ply.Role.Equals(RoleType.Spectator)) continue;
 					if (ply.ReferenceHub.serverRoles.GetUncoloredRoleString().Contains("SCP-035"))
 					{
-						list.Add("scp-035");
+						list.Add("scp035");
 						continue;
 					}
 
