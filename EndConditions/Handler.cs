@@ -58,7 +58,6 @@ namespace EndConditions
 				//Put all the lists from the core dictionary and check em
 				foreach (var condition in EndConditions.Where(condition => !list.Except(condition.Value).Any()))
 				{
-					Log.Debug("Check passed.", AllowDebug);
 					try 
 					{
 						//Get the key that contains the name and escape conditions
@@ -66,19 +65,17 @@ namespace EndConditions
 						Log.Debug($"Using conditions from condition name: '{key}'", AllowDebug);
 						//Check for escape conditions
 						string[] splitKey = key.Split(' ');
-						IEnumerable<string> conds = splitKey.Where(str => EscAdditions.Keys.Contains(str));
-						foreach (string cond in conds)
+						List<string> conds = splitKey.Where(str => EscAdditions.Keys.Contains(str)).ToList();
+						List<string> failedConds = conds.Where(x => !EscAdditions[x]).ToList();
+						if (failedConds.Count > 0)
 						{
-							Log.Debug($"Condition: {cond}, Result: {EscAdditions[cond]}", AllowDebug);
-						}
-						
-						if (conds.Any(str => !EscAdditions[str]))
-						{
-							Log.Debug("Escape conditions check failed:" + " " + key, AllowDebug);
+							Log.Debug($"Failed at: {string.Join(", ", failedConds)}", AllowDebug);
 							continue;
 						}
 
+						Log.Debug("Escape checks passed, ending round.", AllowDebug);
 						EndGame(ev, key);
+						return;
 					}
 					catch (Exception e) 
 					{
