@@ -4,6 +4,7 @@ using System.Linq;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Exiled.API.Enums;
 
 namespace EndConditions
 {
@@ -13,12 +14,24 @@ namespace EndConditions
 		public Handler(Plugin plugin) => this.plugin = plugin;
 
 		private bool AllowDebug => plugin.Config.AllowDebug;
-		public static Dictionary<string, List<string>> escapeConditions = new Dictionary<string, List<string>>();
+
+		internal static Dictionary<string, List<string>> EndConditions
+			= new Dictionary<string, List<string>>();
+
+		private readonly Dictionary<string, bool> EscAdditions = new Dictionary<string, bool>
+		{
+			{ "-classd", RoundSummary.escaped_ds == 0 },
+			{ "+classd", RoundSummary.escaped_ds != 0 },
+			{ "-science", RoundSummary.escaped_scientists == 0 },
+			{ "+science", RoundSummary.escaped_scientists != 0 },
+		}; 
+		
 		public void OnCheckRoundEnd(EndingRoundEventArgs ev) 
 		{
 			if (!plugin.Config.AllowDefaultEndConditions) 
 			{
 				ev.IsAllowed = false;
+				ev.IsRoundEnded = false;
 			}
 			//Check if the warhead has detonated && if the detonation winner is set
 			if (Warhead.IsDetonated && plugin.Config.DetonationWinner != "none") 
@@ -29,11 +42,17 @@ namespace EndConditions
 			{
 				//Shove all alive roles into the list
 				List<string> list = new List<string>();
-				foreach (Player hub in Player.List) 
+				foreach (Player ply in Player.List)
 				{
-					if(hub.Role != RoleType.Spectator)
-						list.Add(hub.Role.ToString().ToLower());
-				}				
+					if (ply.Role.Equals(RoleType.Spectator)) continue;
+					if (ply.ReferenceHub.serverRoles.GetUncoloredRoleString().Contains("SCP-035"))
+					{
+						list.Add("scp-035");
+						continue;
+					}
+
+					list.Add(ply.Role.ToString().ToLower());
+				}
 				//If ignoretut, do the thing.
 				if (plugin.Config.IgnoreTutorials)
 					list.RemoveAll(item => item == "tutorial");
@@ -43,66 +62,21 @@ namespace EndConditions
 					//The actual check
 					if (!list.Except(condition.Value).Any()) 
 					{
-						Log.Debug("Check passed.", AllowDebug);
-						try 
+						//Get the key that contains the name and escape conditions
+						string key = EndConditions.FirstOrDefault(x => x.Value == condition.Value).Key;
+						Log.Debug($"Using conditions from condition name: '{key}'", AllowDebug);
+						//Check for escape conditions
+						string[] splitKey = key.Split(' ');
+						IEnumerable<string> conds = splitKey.Where(str => EscAdditions.Keys.Contains(str));
+						foreach (string cond in conds)
 						{
-							//Get the key that contains the name and escape conditions
-							string key = escapeConditions.FirstOrDefault(x => x.Value == condition.Value).Key;
-							Log.Debug($"Using conditions from condition name: '{key}'", AllowDebug);
-							//Check for escape conditions
-							if (key.Contains("+classd")) 
-							{
-								if (RoundSummary.escaped_ds != 0) 
-								{
-									EndGame(ev, key);
-									return;
-								}
-								else 
-								{
-									Log.Debug("+C Second check failed" + " " + key, AllowDebug);
-								}
-							}
-							else if (key.Contains("-classd")) 
-							{
-								if (RoundSummary.escaped_ds == 0) 
-								{
-									EndGame(ev, key);
-									return;
-								}
-								else 
-								{
-									Log.Debug("-C Second check failed" + " " + key, AllowDebug);
-								}
-							}
-							else if (key.Contains("+science")) 
-							{
-								if (RoundSummary.escaped_scientists != 0) 
-								{
-									EndGame(ev, key);
-									return;
-								}
-								else 
-								{
-									Log.Debug("+S Second check failed" + " " + key, AllowDebug);
-								}
-							}
-							else if (key.Contains("-science")) 
-							{
-								if (RoundSummary.escaped_scientists == 0) 
-								{
-									EndGame(ev, key);
-									return;
-								}
-								else 
-								{
-									Log.Debug("-S Second check failed" + " " + key, AllowDebug);
-								}
-							}
-							else 
-							{
-								EndGame(ev, key);
-								return;
-							}
+							Log.Debug($"Condition: {cond}, Result: {EscAdditions[cond]}", AllowDebug);
+						}
+						
+						if (conds.Any(str => !EscAdditions[str]))
+						{
+							Log.Debug("Escape conditions check failed:" + " " + key, AllowDebug);
+							continue;
 						}
 						catch (Exception e) 
 						{

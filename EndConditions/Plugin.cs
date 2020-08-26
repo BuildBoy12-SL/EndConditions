@@ -33,6 +33,7 @@ namespace EndConditions
 
         public override string Author => "Build";
         public override string Name => "EndConditions";
+        public override Version RequiredExiledVersion => new Version(2, 1, 1);
 
         public void LoadConditions()
 		{
@@ -67,11 +68,12 @@ namespace EndConditions
 					{
 						List<string> hold = new List<string>();
 						JProperty minibundle = bundle.Properties().First();
+						List<string> hold = new List<string>();
 						foreach (string classes in minibundle.Value as JArray)
 						{
 							hold.Add(classes.ToLower());
 						}
-						Handler.escapeConditions.Add($"{group.Name.ToLower()}-{minibundle.Name.ToLower()}", hold);
+						Handler.EndConditions.Add($"{group.Name.ToLower()}-{minibundle.Name.ToLower()}", hold);
 					}
 				}
 				Log.Info("EndConditions Configs loaded.");
