@@ -1,8 +1,8 @@
-﻿using Exiled.API.Interfaces;
-using System.ComponentModel;
-
-namespace EndConditions
+﻿namespace EndConditions
 {
+	using Exiled.API.Interfaces;
+	using System.ComponentModel;
+	
     public sealed class Config : IConfig
     {
         [Description("Enable if EndConditions should be loaded.")]

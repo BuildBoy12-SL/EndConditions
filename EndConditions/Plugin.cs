@@ -1,39 +1,40 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using EndConditions.Properties;
-using Exiled.API.Features;
-using Newtonsoft.Json.Linq;
-using YamlDotNet.Serialization;
-
 namespace EndConditions
 {
-    public class Plugin : Plugin<Config>
-	{
-		public static string PluginDirectory = Path.Combine(Paths.Plugins, "EndConditions");
-		public static string FileDirectory = Path.Combine(PluginDirectory, "config.yml");
-		private Handler handler;
+	using Exiled.API.Features;
+	using Newtonsoft.Json.Linq;
+	using Properties;
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
+	using YamlDotNet.Serialization;
+	using ServerEvents = Exiled.Events.Handlers.Server;
+
+	public class Plugin : Plugin<Config>
+    {
+	    internal static Plugin Instance;
+		internal static readonly string PluginDirectory = Path.Combine(Paths.Plugins, "EndConditions");
+		private static readonly string FileDirectory = Path.Combine(PluginDirectory, "config.yml");
+		private readonly Handler _handler = new Handler();
 
 		public override void OnEnabled() 
 		{
 			base.OnEnabled();
 			LoadConditions();
-			handler = new Handler(this);
-			Exiled.Events.Handlers.Server.EndingRound += handler.OnCheckRoundEnd;
-			Log.Info("EndConditions Loaded.");
+			Instance = this;
+			ServerEvents.EndingRound += _handler.OnCheckRoundEnd;
 		}
 
 		public override void OnDisabled() 
 		{
-			Exiled.Events.Handlers.Server.EndingRound -= handler.OnCheckRoundEnd;
-			handler = null;
+			ServerEvents.EndingRound -= _handler.OnCheckRoundEnd;
+			Instance = null;
 		}
 
         public override string Author => "Build";
         public override string Name => "EndConditions";
-        public override Version RequiredExiledVersion => new Version(2, 1, 1);
+        public override Version RequiredExiledVersion => new Version(2, 1, 6);
 
         public void LoadConditions()
 		{
