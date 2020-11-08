@@ -11,11 +11,12 @@ namespace EndConditions
 	using YamlDotNet.Serialization;
 	using ServerEvents = Exiled.Events.Handlers.Server;
 
-	public class Plugin : Plugin<Config>
+	public class EndConditions : Plugin<Config>
     {
-	    internal static Plugin Instance;
-		internal static readonly string PluginDirectory = Path.Combine(Paths.Plugins, "EndConditions");
-		private static readonly string FileDirectory = Path.Combine(PluginDirectory, "config.yml");
+	    internal static EndConditions Instance;
+	    
+		private static readonly string ConfigDirectory = Path.Combine(Paths.Configs, "EndConditions");
+		private static readonly string FileDirectory = Path.Combine(ConfigDirectory, "config.yml");
 		private readonly Handler _handler = new Handler();
 
 		public override void OnEnabled() 
@@ -28,26 +29,28 @@ namespace EndConditions
 
 		public override void OnDisabled() 
 		{
+			Handler.EndConditions.Clear();
 			ServerEvents.EndingRound -= _handler.OnCheckRoundEnd;
 			Instance = null;
 		}
 
         public override string Author => "Build";
         public override string Name => "EndConditions";
-        public override Version RequiredExiledVersion => new Version(2, 1, 6);
+        public override Version RequiredExiledVersion => new Version(2, 1, 13);
+        public override Version Version => new Version(3, 0, 0);
 
-        public void LoadConditions()
+        private void LoadConditions()
 		{
 			try
 			{
-				string path = Config.UsesGlobalConfig ? FileDirectory : Path.Combine(PluginDirectory, ServerConsole.Port.ToString(), "config.yml");
-				if (!Directory.Exists(PluginDirectory))
-					Directory.CreateDirectory(PluginDirectory);
+				string path = Config.UsesGlobalConfig ? FileDirectory : Path.Combine(ConfigDirectory, ServerConsole.Port.ToString(), "config.yml");
+				if (!Directory.Exists(ConfigDirectory))
+					Directory.CreateDirectory(ConfigDirectory);
 				//If it doesn't exist, make it so it does
 				if (!Config.UsesGlobalConfig)
 				{
-					if (!Directory.Exists(Path.Combine(PluginDirectory, ServerConsole.Port.ToString())))
-						Directory.CreateDirectory(Path.Combine(PluginDirectory, ServerConsole.Port.ToString()));
+					if (!Directory.Exists(Path.Combine(ConfigDirectory, ServerConsole.Port.ToString())))
+						Directory.CreateDirectory(Path.Combine(ConfigDirectory, ServerConsole.Port.ToString()));
 				}
 				if (!File.Exists(path))
 					File.WriteAllText(path, Encoding.UTF8.GetString(Resources.config));
@@ -67,7 +70,6 @@ namespace EndConditions
 				{
 					foreach (JObject bundle in group.Value.Children())
 					{
-						List<string> hold = new List<string>();
 						JProperty minibundle = bundle.Properties().First();
 						List<string> hold = new List<string>();
 						foreach (string classes in minibundle.Value as JArray)

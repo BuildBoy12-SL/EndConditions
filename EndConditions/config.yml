@@ -1,64 +1,62 @@
-﻿#None of the following are case sensative, but it looks good
-endconditions:
+﻿endconditions:
     # Name of the leading team
     FacilityForces:
         ##Condition name: Literally up to you, can be used as an identifier if you want
-        ##The ONLY rules for this is to NOT have two with the same name and to NOT have two sets that end with the same class set.
+        ##The ONLY rule for this is to NOT have two with the same name that are under the same leading team.
         #Append "+science" or "+classd" to the name to check if at least one person has escaped from that team
         #Append "-science" or "-classd" to the name to check if nobody has escaped from that team
         #Note that this can create situations where the round will not end if there is one person alive. Make sure you cover all situations.
-        #This does not currently support appending multiple escape checks
         - Default +science:
-            #Who wins together, using ClassNames from #resources in the EXILED discord
-            - NtfCommander
-            - NtfLieutenant        
-            - NtfCadet
-            - NtfScientist
-            - FacilityGuard
-            - Scientist
+              #Who wins together, using ClassNames from #resources in the EXILED discord
+              - NtfCommander
+              - NtfLieutenant
+              - NtfCadet
+              - NtfScientist
+              - FacilityGuard
+              - Scientist
     ChaosInsurgency:
         - Default +classd:
-            - ChaosInsurgency
-            - ClassD
+              - ChaosInsurgency
+              - ClassD
         - Default2 +classd:
-            - ChaosInsurgency
-            - Scp173
-            - Scp106
-            - Scp049
-            - Scp079
-            - Scp096
-            - Scp0492
-            - Scp93953
-            - Scp93989
+              - ChaosInsurgency
+              - Scp173
+              - Scp106
+              - Scp049
+              - Scp079
+              - Scp096
+              - Scp0492
+              - Scp93953
+              - Scp93989
     Anomalies:
         - Default time:
-            - Scp173
-            - Scp106
-            - Scp049
-            - Scp079
-            - Scp096
-            - Scp0492
-            - Scp93953
-            - Scp93989
-            - ChaosInsurgency
+              - Scp173
+              - Scp106
+              - Scp049
+              - Scp079
+              - Scp096
+              - Scp0492
+              - Scp93953
+              - Scp93989
+              - ChaosInsurgency
     Draw:
         - Default time:
-            - ChaosInsurgency
-            - Scp173
-            - Scp106
-            - Scp049
-            - Scp079
-            - Scp096
-            - Scp0492
-            - Scp93953
-            - Scp93989
+              - ChaosInsurgency
+              - Scp173
+              - Scp106
+              - Scp049
+              - Scp079
+              - Scp096
+              - Scp0492
+              - Scp93953
+              - Scp93989
         - Default 2:
-            - ClassD
-            - ChaosInsurgency
+              - ClassD
+              - ChaosInsurgency
         - Default 3:
-            - NtfCommander
-            - NtfLieutenant        
-            - NtfCadet
-            - NtfScientist
-            - FacilityGuard
-            - Scientist
+              - NtfCommander
+              - NtfLieutenant
+              - NtfCadet
+              - NtfScientist
+              - FacilityGuard
+              - Scientist
