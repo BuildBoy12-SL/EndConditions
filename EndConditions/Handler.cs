@@ -10,8 +10,14 @@ namespace EndConditions
 
     public class Handler
     {
-        internal static readonly Dictionary<string, List<string>> EndConditions
-            = new Dictionary<string, List<string>>();
+        internal static readonly Dictionary<string, List<string>> EndConditions = new();
+
+        public void OnRoundStart()
+        {
+            if (!Instance.Config.RoundEndFf) return;
+            foreach (var player in Player.List)
+                player.IsFriendlyFireEnabled = ServerConsole.FriendlyFire;
+        }
 
         public void OnCheckRoundEnd(EndingRoundEventArgs ev)
         {
@@ -49,7 +55,7 @@ namespace EndConditions
                     continue;
                 }
 
-                if (ply.ReferenceHub.serverRoles.GetUncoloredRoleString().Contains("SCP-035"))
+                if (ply.CustomPlayerInfo == "<color=#FF0000>SCP-035</color>")
                 {
                     list.Add("scp035");
                     continue;
@@ -102,6 +108,10 @@ namespace EndConditions
 
             if (Instance.Config.AllowVerbose)
                 Log.Info($"Force ending with {ev.LeadingTeam} as the lead team.");
+
+            if (Instance.Config.RoundEndFf)
+                foreach (var player in Player.List)
+                    player.IsFriendlyFireEnabled = true;
         }
 
         // Middle man to convert string into RoundSummary.LeadingTeam to account for dictionary keys.

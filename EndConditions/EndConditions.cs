@@ -14,14 +14,15 @@ namespace EndConditions
     public class EndConditions : Plugin<Config>
     {
         internal static EndConditions Instance;
-        private static readonly string ConfigDirectory = Path.Combine(Paths.Configs, "EndConditions");
-        private static readonly string FileDirectory = Path.Combine(ConfigDirectory, "config.yml");
-        private readonly Handler _handler = new Handler();
+        internal static readonly string PluginDirectory = Path.Combine(Paths.Plugins, "EndConditions");
+        private static readonly string FileDirectory = Path.Combine(PluginDirectory, "config.yml");
+        private readonly Handler _handler = new();
 
         public override void OnEnabled()
         {
             LoadConditions();
             Instance = this;
+            ServerEvents.RoundStarted += _handler.OnRoundStart;
             ServerEvents.EndingRound += _handler.OnCheckRoundEnd;
             base.OnEnabled();
         }
@@ -29,14 +30,15 @@ namespace EndConditions
         public override void OnDisabled()
         {
             Handler.EndConditions.Clear();
+            ServerEvents.RoundStarted -= _handler.OnRoundStart;
             ServerEvents.EndingRound -= _handler.OnCheckRoundEnd;
             Instance = null;
         }
 
         public override string Author => "Build";
         public override string Name => "EndConditions";
-        public override Version RequiredExiledVersion => new Version(2, 1, 15);
-        public override Version Version => new Version(3, 0, 0);
+        public override Version RequiredExiledVersion => new(2, 1, 22);
+        public override Version Version => new(3, 0, 1);
 
         private void LoadConditions()
         {
@@ -44,20 +46,19 @@ namespace EndConditions
             {
                 string path = Config.UsesGlobalConfig
                     ? FileDirectory
-                    : Path.Combine(ConfigDirectory, ServerConsole.Port.ToString(), "config.yml");
-                if (!Directory.Exists(ConfigDirectory))
-                    Directory.CreateDirectory(ConfigDirectory);
-                //If it doesn't exist, make it so it does
+                    : Path.Combine(PluginDirectory, ServerConsole.Port.ToString(), "config.yml");
+                if (!Directory.Exists(PluginDirectory))
+                    Directory.CreateDirectory(PluginDirectory);
+                
                 if (!Config.UsesGlobalConfig)
                 {
-                    if (!Directory.Exists(Path.Combine(ConfigDirectory, ServerConsole.Port.ToString())))
-                        Directory.CreateDirectory(Path.Combine(ConfigDirectory, ServerConsole.Port.ToString()));
+                    if (!Directory.Exists(Path.Combine(PluginDirectory, ServerConsole.Port.ToString())))
+                        Directory.CreateDirectory(Path.Combine(PluginDirectory, ServerConsole.Port.ToString()));
                 }
 
                 if (!File.Exists(path))
                     File.WriteAllText(path, Encoding.UTF8.GetString(Resources.config));
 
-                //Read the file
                 FileStream stream = File.OpenRead(path);
                 IDeserializer deserializer = new DeserializerBuilder().Build();
                 object yamlObject = deserializer.Deserialize(new StreamReader(stream));
@@ -65,7 +66,6 @@ namespace EndConditions
                 string jsonString = serializer.Serialize(yamlObject);
                 JObject json = JObject.Parse(jsonString);
 
-                //Get the EndConditions
                 JObject configs = json.SelectToken("endconditions").Value<JObject>();
                 JProperty[] groups = configs.Properties().ToArray();
                 foreach (JProperty group in groups)

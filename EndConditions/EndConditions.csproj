@@ -4,6 +4,7 @@
         <TargetFramework>net472</TargetFramework>
         <RootNamespace>EndConditions</RootNamespace>
         <AssemblyName>EndConditions</AssemblyName>
+        <LangVersion>9</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -11,11 +12,32 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="EXILED" Version="2.1.15" />
+      <PackageReference Include="EXILED" Version="2.1.22" />
       <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\Assembly-CSharp-Publicized.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\Assembly-CSharp-firstpass.dll</HintPath>
+      </Reference>
+      <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\Mirror.dll</HintPath>
+      </Reference>
+      <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+        <HintPath>bin\Release\net472\Newtonsoft.Json.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="YamlDotNet, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e">
+        <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\YamlDotNet.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
     <ItemGroup>
@@ -31,27 +53,6 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\..\..\..\..\..\home\build\Downloads\Assembly-CSharp-Publicized.dll</HintPath>
-      </Reference>
-      <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\..\..\..\..\..\home\build\Downloads\Assembly-CSharp-firstpass.dll</HintPath>
-      </Reference>
-      <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\..\..\Backups-[Drive]\VPS-Backups\SCP-Server-1\SCPSL_Data\Managed\Mirror.dll</HintPath>
-      </Reference>
-      <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-        <HintPath>..\..\..\..\..\..\..\..\home\build\.config\EXILED\Plugins\dependencies\Newtonsoft.Json.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\..\..\Backups-[Drive]\VPS-Backups\SCP-Server-1\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      </Reference>
-      <Reference Include="YamlDotNet, Version=8.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e">
-        <HintPath>..\..\..\..\..\..\..\..\home\build\.config\EXILED\Plugins\dependencies\YamlDotNet.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>
