@@ -13,7 +13,7 @@
 | `detonation_winner` | string | none | Determines who will win when the warhead detonates using LeadingTeam names. |
 | `ignore_tutorials` | bool | true | Determines if tutorials are calculated as a player. |
 
-- The configs file for EndConditions, used for win conditions not the above configs, is located at __{PluginsDirectory}/EndConditions/config.yml__ by default.
+- The configs file for EndConditions, used for win conditions not the above configs, is located at __{ConfigsDirectory}/EndConditions/config.yml__ by default.
 
 ## Leading team names:
 - FacilityForces

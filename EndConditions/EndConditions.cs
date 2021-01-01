@@ -14,8 +14,8 @@ namespace EndConditions
     public class EndConditions : Plugin<Config>
     {
         internal static EndConditions Instance;
-        internal static readonly string PluginDirectory = Path.Combine(Paths.Plugins, "EndConditions");
-        private static readonly string FileDirectory = Path.Combine(PluginDirectory, "config.yml");
+        private static readonly string ConfigsDirectory = Path.Combine(Paths.Configs, "EndConditions");
+        private static readonly string FileDirectory = Path.Combine(ConfigsDirectory, "config.yml");
         private readonly Handler _handler = new();
 
         public override void OnEnabled()
@@ -38,7 +38,7 @@ namespace EndConditions
         public override string Author => "Build";
         public override string Name => "EndConditions";
         public override Version RequiredExiledVersion => new(2, 1, 22);
-        public override Version Version => new(3, 0, 1);
+        public override Version Version => new(3, 0, 2);
 
         private void LoadConditions()
         {
@@ -46,14 +46,14 @@ namespace EndConditions
             {
                 string path = Config.UsesGlobalConfig
                     ? FileDirectory
-                    : Path.Combine(PluginDirectory, ServerConsole.Port.ToString(), "config.yml");
-                if (!Directory.Exists(PluginDirectory))
-                    Directory.CreateDirectory(PluginDirectory);
+                    : Path.Combine(ConfigsDirectory, ServerConsole.Port.ToString(), "config.yml");
+                if (!Directory.Exists(ConfigsDirectory))
+                    Directory.CreateDirectory(ConfigsDirectory);
                 
                 if (!Config.UsesGlobalConfig)
                 {
-                    if (!Directory.Exists(Path.Combine(PluginDirectory, ServerConsole.Port.ToString())))
-                        Directory.CreateDirectory(Path.Combine(PluginDirectory, ServerConsole.Port.ToString()));
+                    if (!Directory.Exists(Path.Combine(ConfigsDirectory, ServerConsole.Port.ToString())))
+                        Directory.CreateDirectory(Path.Combine(ConfigsDirectory, ServerConsole.Port.ToString()));
                 }
 
                 if (!File.Exists(path))
