@@ -9,35 +9,34 @@ namespace EndConditions
     using System.Linq;
     using System.Text;
     using YamlDotNet.Serialization;
-    using ServerEvents = Exiled.Events.Handlers.Server;
+    using ServerHandlers = Exiled.Events.Handlers.Server;
 
     public class EndConditions : Plugin<Config>
     {
-        internal static EndConditions Instance;
         private static readonly string ConfigsDirectory = Path.Combine(Paths.Configs, "EndConditions");
         private static readonly string FileDirectory = Path.Combine(ConfigsDirectory, "config.yml");
-        private readonly Handler _handler = new();
+        private EventHandlers _eventHandlers;
 
         public override void OnEnabled()
         {
             LoadConditions();
-            Instance = this;
-            ServerEvents.RoundStarted += _handler.OnRoundStart;
-            ServerEvents.EndingRound += _handler.OnCheckRoundEnd;
+            _eventHandlers = new EventHandlers(Config);
+            ServerHandlers.RoundStarted += _eventHandlers.OnRoundStart;
+            ServerHandlers.EndingRound += _eventHandlers.OnCheckRoundEnd;
             base.OnEnabled();
         }
 
         public override void OnDisabled()
         {
-            Handler.EndConditions.Clear();
-            ServerEvents.RoundStarted -= _handler.OnRoundStart;
-            ServerEvents.EndingRound -= _handler.OnCheckRoundEnd;
-            Instance = null;
+            EventHandlers.EndConditions.Clear();
+            ServerHandlers.RoundStarted -= _eventHandlers.OnRoundStart;
+            ServerHandlers.EndingRound -= _eventHandlers.OnCheckRoundEnd;
+            _eventHandlers = null;
         }
 
         public override string Author => "Build";
         public override string Name => "EndConditions";
-        public override Version RequiredExiledVersion => new(2, 1, 22);
+        public override Version RequiredExiledVersion => new(2, 1, 34);
         public override Version Version => new(3, 0, 2);
 
         private void LoadConditions()
@@ -49,7 +48,7 @@ namespace EndConditions
                     : Path.Combine(ConfigsDirectory, ServerConsole.Port.ToString(), "config.yml");
                 if (!Directory.Exists(ConfigsDirectory))
                     Directory.CreateDirectory(ConfigsDirectory);
-                
+
                 if (!Config.UsesGlobalConfig)
                 {
                     if (!Directory.Exists(Path.Combine(ConfigsDirectory, ServerConsole.Port.ToString())))
@@ -79,7 +78,7 @@ namespace EndConditions
                             hold.Add(classes.ToLower());
                         }
 
-                        Handler.EndConditions.Add($"{group.Name.ToLower()}-{minibundle.Name.ToLower()}", hold);
+                        EventHandlers.EndConditions.Add($"{group.Name.ToLower()}-{minibundle.Name.ToLower()}", hold);
                     }
                 }
 

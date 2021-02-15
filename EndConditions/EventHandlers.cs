@@ -6,31 +6,35 @@ namespace EndConditions
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using static EndConditions;
 
-    public class Handler
+    public class EventHandlers
     {
+        public EventHandlers(Config config) => _config = config;
+        private readonly Config _config;
+        
         internal static readonly Dictionary<string, List<string>> EndConditions = new();
 
         public void OnRoundStart()
         {
-            if (!Instance.Config.RoundEndFf) return;
-            foreach (var player in Player.List)
-                player.IsFriendlyFireEnabled = ServerConsole.FriendlyFire;
+            if (_config.RoundEndFf)
+            {
+                foreach (var player in Player.List)
+                    player.IsFriendlyFireEnabled = ServerConsole.FriendlyFire;
+            }
         }
 
         public void OnCheckRoundEnd(EndingRoundEventArgs ev)
         {
-            if (!Instance.Config.AllowDefaultEndConditions)
+            if (!_config.AllowDefaultEndConditions)
             {
                 ev.IsAllowed = false;
                 ev.IsRoundEnded = false;
             }
 
             // Check if the warhead has detonated && if the detonation winner is set
-            if (Warhead.IsDetonated && Instance.Config.DetonationWinner != "none")
+            if (Warhead.IsDetonated && _config.DetonationWinner != "none")
             {
-                EndGame(ev, Instance.Config.DetonationWinner);
+                EndGame(ev, _config.DetonationWinner);
                 return;
             }
 
@@ -55,13 +59,13 @@ namespace EndConditions
                     continue;
                 }
 
-                if (ply.CustomPlayerInfo == "<color=#FF0000>SCP-035</color>")
+                if (ply.CustomInfo == "<color=#FF0000>SCP-035</color>")
                 {
                     list.Add("scp035");
                     continue;
                 }
 
-                if (ply.Role == RoleType.Tutorial && Instance.Config.IgnoreTutorials)
+                if (ply.Role == RoleType.Tutorial && _config.IgnoreTutorials)
                     continue;
 
                 list.Add(ply.Role.ToString().ToLower());
@@ -74,18 +78,18 @@ namespace EndConditions
                 {
                     // Get the key that contains the name and escape conditions
                     string key = EndConditions.FirstOrDefault(x => x.Value == condition.Value).Key;
-                    Log.Debug($"Using conditions from condition name: '{key}'", Instance.Config.AllowDebug);
+                    Log.Debug($"Using conditions from condition name: '{key}'", _config.AllowDebug);
                     // Check for escape conditions
                     string[] splitKey = key.Split(' ');
                     List<string> conds = splitKey.Where(str => escAdditions.Keys.Contains(str)).ToList();
                     List<string> failedConds = conds.Where(x => !escAdditions[x]).ToList();
                     if (failedConds.Count > 0)
                     {
-                        Log.Debug($"Failed at: {string.Join(", ", failedConds)}", Instance.Config.AllowDebug);
+                        Log.Debug($"Failed at: {string.Join(", ", failedConds)}", _config.AllowDebug);
                         continue;
                     }
 
-                    Log.Debug("Escape checks passed, ending round.", Instance.Config.AllowDebug);
+                    Log.Debug("Escape checks passed, ending round.", _config.AllowDebug);
                     EndGame(ev, key);
                     return;
                 }
@@ -96,25 +100,24 @@ namespace EndConditions
             }
         }
 
-        // Central round end function
         private void EndGame(EndingRoundEventArgs ev, string team)
         {
             ev.LeadingTeam = ConvertTeam(team);
+            Round.ForceEnd();
             ev.IsRoundEnded = true;
-            ev.IsAllowed = true;
 
             API.BlacklistedPlayers.Clear();
             API.ModifiedRoles.Clear();
 
-            if (Instance.Config.AllowVerbose)
-                Log.Info($"Force ending with {ev.LeadingTeam} as the lead team.");
+            Log.Debug($"Force ending with {ev.LeadingTeam} as the lead team.", _config.AllowDebug);
 
-            if (Instance.Config.RoundEndFf)
+            if (_config.RoundEndFf)
+            {
                 foreach (var player in Player.List)
                     player.IsFriendlyFireEnabled = true;
+            }
         }
 
-        // Middle man to convert string into RoundSummary.LeadingTeam to account for dictionary keys.
         private LeadingTeam ConvertTeam(string arg)
         {
             string team = arg.ToLower();
@@ -127,7 +130,7 @@ namespace EndConditions
             if (team.StartsWith("draw"))
                 return LeadingTeam.Draw;
 
-            Log.Debug($"Could not parse {arg} into a team, returning as a draw.", Instance.Config.AllowDebug);
+            Log.Debug($"Could not parse {arg} into a team, returning as a draw.", _config.AllowDebug);
             return LeadingTeam.Draw;
         }
     }

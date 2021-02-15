@@ -8,11 +8,11 @@ namespace EndConditions
         /// <summary>
         /// Any player in this list will be ignored when checking roles.
         /// </summary>
-        public static readonly List<Player> BlacklistedPlayers = new();
+        public static List<Player> BlacklistedPlayers { get; } = new();
 
         /// <summary>
         /// Any player in this dictionary will have the role specified by the string rather than by their in-game role.
         /// </summary>
-        public static readonly Dictionary<Player, string> ModifiedRoles = new();
+        public static Dictionary<Player, string> ModifiedRoles { get; } = new();
     }
 }
