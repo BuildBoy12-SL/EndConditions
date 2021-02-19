@@ -37,8 +37,8 @@ namespace EndConditions
 
         public override string Author => "Build";
         public override string Name => "EndConditions";
-        public override Version RequiredExiledVersion => new(2, 1, 34);
-        public override Version Version => new(3, 0, 3);
+        public override Version RequiredExiledVersion => new(2, 2, 4);
+        public override Version Version => new(3, 1, 0);
 
         private void LoadConditions()
         {
