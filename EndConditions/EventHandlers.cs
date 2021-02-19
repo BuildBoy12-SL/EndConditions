@@ -12,7 +12,15 @@ namespace EndConditions
         public EventHandlers(Config config) => _config = config;
         private readonly Config _config;
         
-        internal static readonly Dictionary<string, List<string>> EndConditions = new();
+        public static List<Condition> Conditions { get; } = new();
+
+        private readonly Dictionary<string, bool> _escAdditions = new()
+        {
+            ["-classd"] = false,
+            ["+classd"] = false,
+            ["-science"] = false,
+            ["+science"] = false
+        };
 
         public void OnRoundStart()
         {
@@ -31,22 +39,49 @@ namespace EndConditions
                 ev.IsRoundEnded = false;
             }
 
-            // Check if the warhead has detonated && if the detonation winner is set
-            if (Warhead.IsDetonated && _config.DetonationWinner != "none")
+            if (Warhead.IsDetonated && _config.EndOnDetonation)
             {
                 EndGame(ev, _config.DetonationWinner);
                 return;
             }
 
-            var escAdditions = new Dictionary<string, bool>
-            {
-                {"-classd", RoundSummary.escaped_ds == 0},
-                {"+classd", RoundSummary.escaped_ds != 0},
-                {"-science", RoundSummary.escaped_scientists == 0},
-                {"+science", RoundSummary.escaped_scientists != 0},
-            };
+            _escAdditions["-classd"] = RoundSummary.escaped_ds == 0;
+            _escAdditions["+classd"] = RoundSummary.escaped_ds != 0;
+            _escAdditions["-science"] = RoundSummary.escaped_scientists == 0;
+            _escAdditions["+science"] = RoundSummary.escaped_scientists != 0;
 
-            // Shove all alive roles into the list
+            // Pull all the lists from the core dictionary and check em
+            foreach (var condition in Conditions.Where(condition => GetRoles().Except(condition.RoleConditions).ToList().Count == 0))
+            {
+                try
+                {
+                    // Get the key that contains the name and escape conditions
+                    Condition cond = Conditions.FirstOrDefault(x => x.RoleConditions == condition.RoleConditions);
+                    Log.Debug($"Using conditions from condition name: '{cond.Name}'", _config.AllowDebug);
+                    
+                    // Check for escape conditions
+                    string[] splitKey = cond.Name.Split(' ');
+                    List<string> parsedConditions = splitKey.Where(str => _escAdditions.Keys.Contains(str)).ToList();
+                    List<string> failedConditions = parsedConditions.Where(x => !_escAdditions[x]).ToList();
+                    if (failedConditions.Count > 0)
+                    {
+                        Log.Debug($"Failed at: {string.Join(", ", failedConditions)}", _config.AllowDebug);
+                        continue;
+                    }
+
+                    Log.Debug("Escape checks passed, ending round.", _config.AllowDebug);
+                    EndGame(ev, cond.LeadingTeam);
+                    return;
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Exception during final checks: {e.Message}\n{e.StackTrace}");
+                }
+            }
+        }
+
+        private IEnumerable<string> GetRoles()
+        {
             List<string> list = new List<string>();
             foreach (Player ply in Player.List)
             {
@@ -71,41 +106,18 @@ namespace EndConditions
                 list.Add(ply.Role.ToString().ToLower());
             }
 
-            // Pull all the lists from the core dictionary and check em
-            foreach (var condition in EndConditions.Where(condition => !list.Except(condition.Value).Any()))
-            {
-                try
-                {
-                    // Get the key that contains the name and escape conditions
-                    string key = EndConditions.FirstOrDefault(x => x.Value == condition.Value).Key;
-                    Log.Debug($"Using conditions from condition name: '{key}'", _config.AllowDebug);
-                    // Check for escape conditions
-                    string[] splitKey = key.Split(' ');
-                    List<string> conds = splitKey.Where(str => escAdditions.Keys.Contains(str)).ToList();
-                    List<string> failedConds = conds.Where(x => !escAdditions[x]).ToList();
-                    if (failedConds.Count > 0)
-                    {
-                        Log.Debug($"Failed at: {string.Join(", ", failedConds)}", _config.AllowDebug);
-                        continue;
-                    }
-
-                    Log.Debug("Escape checks passed, ending round.", _config.AllowDebug);
-                    EndGame(ev, key);
-                    return;
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Exception during final checks: {e}");
-                }
-            }
+            return list;
         }
 
-        private void EndGame(EndingRoundEventArgs ev, string team)
+        private void EndGame(EndingRoundEventArgs ev, LeadingTeam leadingTeam)
         {
-            ev.LeadingTeam = ConvertTeam(team);
-            Round.ForceEnd();
+            ev.LeadingTeam = leadingTeam;
+            ev.IsAllowed = true;
             ev.IsRoundEnded = true;
-
+            
+            // Force end because people bothered me to put this in
+            Round.ForceEnd();
+            
             API.BlacklistedPlayers.Clear();
             API.ModifiedRoles.Clear();
 
@@ -116,22 +128,6 @@ namespace EndConditions
                 foreach (var player in Player.List)
                     player.IsFriendlyFireEnabled = true;
             }
-        }
-
-        private LeadingTeam ConvertTeam(string arg)
-        {
-            string team = arg.ToLower();
-            if (team.StartsWith("facilityforces"))
-                return LeadingTeam.FacilityForces;
-            if (team.StartsWith("chaosinsurgency"))
-                return LeadingTeam.ChaosInsurgency;
-            if (team.StartsWith("anomalies"))
-                return LeadingTeam.Anomalies;
-            if (team.StartsWith("draw"))
-                return LeadingTeam.Draw;
-
-            Log.Debug($"Could not parse {arg} into a team, returning as a draw.", _config.AllowDebug);
-            return LeadingTeam.Draw;
         }
     }
 }

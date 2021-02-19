@@ -26,11 +26,17 @@
       <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\Assembly-CSharp-firstpass.dll</HintPath>
       </Reference>
+      <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\CommandSystem.Core.dll</HintPath>
+      </Reference>
       <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\Mirror.dll</HintPath>
       </Reference>
       <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
         <HintPath>bin\Release\net472\Newtonsoft.Json.dll</HintPath>
+      </Reference>
+      <Reference Include="NorthwoodLib, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\NorthwoodLib.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\..\SubclassItems-2.0\Compile\bin\Release\net472\UnityEngine.CoreModule.dll</HintPath>
