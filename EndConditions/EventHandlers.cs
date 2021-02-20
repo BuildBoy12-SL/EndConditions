@@ -59,8 +59,7 @@ namespace EndConditions
                     
                     // Check for escape conditions
                     string[] splitName = condition.Name.Split(' ');
-                    IEnumerable<string> parsedConditions = splitName.Where(str => _escAdditions.Keys.Contains(str));
-                    List<string> failedConditions = parsedConditions.Where(x => !_escAdditions[x]).ToList();
+                    List<string> failedConditions = splitName.Where(escapeCondition => _escAdditions.TryGetValue(escapeCondition, out bool passed) && !passed).ToList();
                     if (failedConditions.Count > 0)
                     {
                         Log.Debug($"Failed at: {string.Join(", ", failedConditions)}", _config.AllowDebug);
