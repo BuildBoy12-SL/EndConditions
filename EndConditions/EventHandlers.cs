@@ -41,6 +41,7 @@ namespace EndConditions
 
             if (Warhead.IsDetonated && _config.EndOnDetonation)
             {
+                Log.Debug("Ending the round via warhead detonation.", _config.AllowDebug);
                 EndGame(ev, _config.DetonationWinner);
                 return;
             }
@@ -50,8 +51,10 @@ namespace EndConditions
             _escAdditions["-science"] = RoundSummary.escaped_scientists == 0;
             _escAdditions["+science"] = RoundSummary.escaped_scientists != 0;
 
+            IEnumerable<string> roles = GetRoles();
+
             // Pull all the lists from the core dictionary and check em
-            foreach (var condition in Conditions.Where(condition => !GetRoles().Except(condition.RoleConditions).Any()))
+            foreach (var condition in Conditions.Where(condition => !roles.Except(condition.RoleConditions).Any()))
             {
                 try
                 {
@@ -82,7 +85,7 @@ namespace EndConditions
             List<string> list = new List<string>();
             foreach (Player ply in Player.List)
             {
-                if (ply.Role == RoleType.Spectator || API.BlacklistedPlayers.Contains(ply))
+                if (string.IsNullOrEmpty(ply.UserId) || ply.Role == RoleType.Spectator || API.BlacklistedPlayers.Contains(ply))
                     continue;
 
                 if (API.ModifiedRoles.ContainsKey(ply))

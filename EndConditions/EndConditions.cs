@@ -16,13 +16,13 @@ namespace EndConditions
     {
         private static readonly string ConfigsDirectory = Path.Combine(Paths.Configs, "EndConditions");
         private static readonly string FileDirectory = Path.Combine(ConfigsDirectory, "config.yml");
-        private EventHandlers _eventHandlers;
+        internal static EventHandlers EventHandlers;
 
         public override void OnEnabled()
         {
-            _eventHandlers = new EventHandlers(Config);
-            ServerHandlers.RoundStarted += _eventHandlers.OnRoundStart;
-            ServerHandlers.EndingRound += _eventHandlers.OnCheckRoundEnd;
+            EventHandlers = new EventHandlers(Config);
+            ServerHandlers.RoundStarted += EventHandlers.OnRoundStart;
+            ServerHandlers.EndingRound += EventHandlers.OnCheckRoundEnd;
             LoadConditions();
             base.OnEnabled();
         }
@@ -30,9 +30,9 @@ namespace EndConditions
         public override void OnDisabled()
         {
             EventHandlers.Conditions.Clear();
-            ServerHandlers.RoundStarted -= _eventHandlers.OnRoundStart;
-            ServerHandlers.EndingRound -= _eventHandlers.OnCheckRoundEnd;
-            _eventHandlers = null;
+            ServerHandlers.RoundStarted -= EventHandlers.OnRoundStart;
+            ServerHandlers.EndingRound -= EventHandlers.OnCheckRoundEnd;
+            EventHandlers = null;
         }
 
         public override string Author => "Build";
