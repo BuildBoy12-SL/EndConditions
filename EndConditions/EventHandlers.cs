@@ -11,7 +11,7 @@ namespace EndConditions
     {
         public EventHandlers(Config config) => _config = config;
         private readonly Config _config;
-        
+
         public static List<Condition> Conditions { get; } = new();
 
         private readonly Dictionary<string, bool> _escAdditions = new()
@@ -56,7 +56,7 @@ namespace EndConditions
                 try
                 {
                     Log.Debug($"Using conditions from condition name: '{condition.Name}'", _config.AllowDebug);
-                    
+
                     // Check for escape conditions
                     string[] splitName = condition.Name.Split(' ');
                     List<string> failedConditions = splitName.Where(escapeCondition => _escAdditions.TryGetValue(escapeCondition, out bool passed) && !passed).ToList();
@@ -111,10 +111,10 @@ namespace EndConditions
             ev.LeadingTeam = leadingTeam;
             ev.IsAllowed = true;
             ev.IsRoundEnded = true;
-            
+
             // Force end because people bothered me to put this in
             Round.ForceEnd();
-            
+
             API.BlacklistedPlayers.Clear();
             API.ModifiedRoles.Clear();
 
