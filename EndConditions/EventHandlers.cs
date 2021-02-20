@@ -51,17 +51,15 @@ namespace EndConditions
             _escAdditions["+science"] = RoundSummary.escaped_scientists != 0;
 
             // Pull all the lists from the core dictionary and check em
-            foreach (var condition in Conditions.Where(condition => GetRoles().Except(condition.RoleConditions).ToList().Count == 0))
+            foreach (var condition in Conditions.Where(condition => !GetRoles().Except(condition.RoleConditions).Any()))
             {
                 try
                 {
-                    // Get the key that contains the name and escape conditions
-                    Condition cond = Conditions.FirstOrDefault(x => x.RoleConditions == condition.RoleConditions);
-                    Log.Debug($"Using conditions from condition name: '{cond.Name}'", _config.AllowDebug);
+                    Log.Debug($"Using conditions from condition name: '{condition.Name}'", _config.AllowDebug);
                     
                     // Check for escape conditions
-                    string[] splitKey = cond.Name.Split(' ');
-                    List<string> parsedConditions = splitKey.Where(str => _escAdditions.Keys.Contains(str)).ToList();
+                    string[] splitName = condition.Name.Split(' ');
+                    IEnumerable<string> parsedConditions = splitName.Where(str => _escAdditions.Keys.Contains(str));
                     List<string> failedConditions = parsedConditions.Where(x => !_escAdditions[x]).ToList();
                     if (failedConditions.Count > 0)
                     {
@@ -70,7 +68,7 @@ namespace EndConditions
                     }
 
                     Log.Debug("Escape checks passed, ending round.", _config.AllowDebug);
-                    EndGame(ev, cond.LeadingTeam);
+                    EndGame(ev, condition.LeadingTeam);
                     return;
                 }
                 catch (Exception e)
