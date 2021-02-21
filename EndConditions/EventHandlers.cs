@@ -82,7 +82,6 @@ namespace EndConditions
 
         private IEnumerable<string> GetRoles()
         {
-            List<string> list = new List<string>();
             foreach (Player ply in Player.List)
             {
                 if (string.IsNullOrEmpty(ply.UserId) || ply.Role == RoleType.Spectator || API.BlacklistedPlayers.Contains(ply))
@@ -90,23 +89,19 @@ namespace EndConditions
 
                 if (API.ModifiedRoles.ContainsKey(ply))
                 {
-                    list.Add(API.ModifiedRoles[ply]);
-                    continue;
+                    yield return API.ModifiedRoles[ply].ToLower();
                 }
 
                 if (ply.CustomInfo == "<color=#FF0000>SCP-035</color>")
                 {
-                    list.Add("scp035");
-                    continue;
+                    yield return "scp035";
                 }
 
                 if (ply.Role == RoleType.Tutorial && _config.IgnoreTutorials)
                     continue;
-
-                list.Add(ply.Role.ToString().ToLower());
+                
+                yield return ply.Role.ToString().ToLower();
             }
-
-            return list;
         }
 
         private void EndGame(EndingRoundEventArgs ev, LeadingTeam leadingTeam)
