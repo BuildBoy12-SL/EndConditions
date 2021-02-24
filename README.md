@@ -7,13 +7,14 @@
 |:------------------------:|:----------:|:-------------:|:------------------------------------------:|
 | `is_enabled` | bool | true | Enables/Disables the plugin. |
 | `uses_global_config` | bool | true | Determines if the server reads from the central config file, otherwise it makes a new one. |
-| `allow_verbose` | bool | false | Enables/Disables printing of confirmation messages when configured conditions are met. |
 | `allow_debug` | bool | false | Enables/Disables printing of various debug messages. |
 | `allow_default_end_conditions` | bool | false | Enables/Disables the use of base game round end conditions. |
-| `detonation_winner` | string | none | Determines who will win when the warhead detonates using LeadingTeam names. |
+| `end_on_detonation` | bool | false | Enables/Disables the round ending when the warhead detonates.. |
+| `detonation_winner` | LeadingTeam | FacilityForces | Determines who will win when the warhead detonates using LeadingTeam names. |
 | `ignore_tutorials` | bool | true | Determines if tutorials are calculated as a player. |
+| `round_end_ff` | bool | false | Determines if FriendlyFire should be enabled when the round ends. |
 
-- The configs file for EndConditions, used for win conditions not the above configs, is located at __{ConfigsDirectory}/EndConditions/config.yml__ by default.
+- The configs file for EndConditions, used for win conditions and not the above configs, is located at __/EXILED/Configs/EndConditions/config.yml__ by default.
 
 ## Leading team names:
 - FacilityForces
