@@ -5,13 +5,15 @@ namespace EndConditions
 
     public readonly struct Condition
     {
-        public Condition(LeadingTeam leadingTeam, string name, List<string> roleConditions)
+        public Condition(List<string> escapeConditions, LeadingTeam leadingTeam, string name, List<string> roleConditions)
         {
+            EscapeConditions = escapeConditions;
             LeadingTeam = leadingTeam;
             Name = name;
             RoleConditions = roleConditions;
         }
 
+        public List<string> EscapeConditions { get; }
         public LeadingTeam LeadingTeam { get; }
         public string Name { get; }
         public List<string> RoleConditions { get; }

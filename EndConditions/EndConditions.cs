@@ -21,8 +21,9 @@ namespace EndConditions
         public override void OnEnabled()
         {
             EventHandlers = new EventHandlers(Config);
-            ServerHandlers.RoundStarted += EventHandlers.OnRoundStart;
             ServerHandlers.EndingRound += EventHandlers.OnCheckRoundEnd;
+            ServerHandlers.ReloadedConfigs += OnReloadedConfigs;
+            ServerHandlers.RoundStarted += EventHandlers.OnRoundStart;
             LoadConditions();
             base.OnEnabled();
         }
@@ -30,30 +31,37 @@ namespace EndConditions
         public override void OnDisabled()
         {
             EventHandlers.Conditions.Clear();
-            ServerHandlers.RoundStarted -= EventHandlers.OnRoundStart;
             ServerHandlers.EndingRound -= EventHandlers.OnCheckRoundEnd;
+            ServerHandlers.ReloadedConfigs -= OnReloadedConfigs;
+            ServerHandlers.RoundStarted -= EventHandlers.OnRoundStart;
             EventHandlers = null;
+            base.OnDisabled();
         }
 
         public override string Author => "Build";
         public override string Name => "EndConditions";
-        public override Version RequiredExiledVersion => new(2, 2, 4);
-        public override Version Version => new(3, 1, 1);
+        public override Version RequiredExiledVersion => new(2, 3, 3);
+        public override Version Version => new(3, 1, 2);
 
+        private void OnReloadedConfigs()
+        {
+            EventHandlers.Conditions.Clear();
+            LoadConditions();
+        }
+        
         private void LoadConditions()
         {
             try
             {
-                string path = Config.UsesGlobalConfig
-                    ? FileDirectory
-                    : Path.Combine(ConfigsDirectory, ServerConsole.Port.ToString(), "config.yml");
+                string path = Config.UsesGlobalConfig ? FileDirectory : Path.Combine(ConfigsDirectory, Server.Port.ToString(), "config.yml");
+                
                 if (!Directory.Exists(ConfigsDirectory))
                     Directory.CreateDirectory(ConfigsDirectory);
 
                 if (!Config.UsesGlobalConfig)
                 {
-                    if (!Directory.Exists(Path.Combine(ConfigsDirectory, ServerConsole.Port.ToString())))
-                        Directory.CreateDirectory(Path.Combine(ConfigsDirectory, ServerConsole.Port.ToString()));
+                    if (!Directory.Exists(Path.Combine(ConfigsDirectory, Server.Port.ToString())))
+                        Directory.CreateDirectory(Path.Combine(ConfigsDirectory, Server.Port.ToString()));
                 }
 
                 if (!File.Exists(path))
@@ -105,8 +113,12 @@ namespace EndConditions
                         {
                             hold.Add(item.ToLower());
                         }
-                        
-                        EventHandlers.Conditions.Add(new Condition(leadingTeam, $"{miniBundle.Name}", hold));
+
+                        List<string> splitName = miniBundle.Name.Split(' ').ToList();
+                        List<string> escapeConditions = splitName.Where(item => EventHandlers.EscapeTracking.ContainsKey(item)).ToList();
+                        escapeConditions.ForEach(item => splitName.Remove(item));
+
+                        EventHandlers.Conditions.Add(new Condition(escapeConditions, leadingTeam, string.Join(" ", splitName).Trim(), hold));
                     }
                 }
             }

@@ -14,7 +14,7 @@ namespace EndConditions
 
         public static List<Condition> Conditions { get; } = new();
 
-        private readonly Dictionary<string, bool> _escAdditions = new()
+        internal readonly Dictionary<string, bool> EscapeTracking = new()
         {
             ["-classd"] = false,
             ["+classd"] = false,
@@ -46,10 +46,10 @@ namespace EndConditions
                 return;
             }
 
-            _escAdditions["-classd"] = RoundSummary.escaped_ds == 0;
-            _escAdditions["+classd"] = RoundSummary.escaped_ds != 0;
-            _escAdditions["-science"] = RoundSummary.escaped_scientists == 0;
-            _escAdditions["+science"] = RoundSummary.escaped_scientists != 0;
+            EscapeTracking["-classd"] = RoundSummary.escaped_ds == 0;
+            EscapeTracking["+classd"] = RoundSummary.escaped_ds != 0;
+            EscapeTracking["-science"] = RoundSummary.escaped_scientists == 0;
+            EscapeTracking["+science"] = RoundSummary.escaped_scientists != 0;
 
             IEnumerable<string> roles = GetRoles();
 
@@ -60,12 +60,11 @@ namespace EndConditions
                 {
                     Log.Debug($"Using conditions from condition name: '{condition.Name}'", _config.AllowDebug);
 
-                    // Check for escape conditions
-                    string[] splitName = condition.Name.Split(' ');
-                    List<string> failedConditions = splitName.Where(escapeCondition => _escAdditions.TryGetValue(escapeCondition, out bool passed) && !passed).ToList();
+                    // Check escape conditions
+                    List<string> failedConditions = condition.EscapeConditions.Where(cond => !EscapeTracking[cond]).ToList();
                     if (failedConditions.Count > 0)
                     {
-                        Log.Debug($"Failed at: {string.Join(", ", failedConditions)}", _config.AllowDebug);
+                        Log.Debug($"Escape conditions failed at: {string.Join(", ", failedConditions)}", _config.AllowDebug);
                         continue;
                     }
 

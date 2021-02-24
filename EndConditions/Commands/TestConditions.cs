@@ -6,6 +6,7 @@ namespace EndConditions.Commands
     using Exiled.Permissions.Extensions;
     using System;
 
+    [CommandHandler(typeof(GameConsoleCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class TestConditions : ICommand
     {

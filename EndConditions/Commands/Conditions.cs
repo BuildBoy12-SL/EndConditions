@@ -15,6 +15,7 @@ namespace EndConditions.Commands
             foreach (Condition condition in EventHandlers.Conditions)
             {
                 stringBuilder.Append(Environment.NewLine).AppendLine(condition.Name).AppendLine($"Leading Team: {condition.LeadingTeam}")
+                    .AppendLine($"Escape Conditions: {string.Join(", ", condition.EscapeConditions)}")
                     .AppendLine($"Roles: {string.Join(", ", condition.RoleConditions)}");
             }
 
