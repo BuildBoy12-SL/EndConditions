@@ -45,10 +45,13 @@ namespace EndConditions
 
         private void OnReloadedConfigs()
         {
+            bool isLocked = Round.IsLocked;
             Round.IsLocked = true;
+            
             EventHandlers.Conditions.Clear();
             LoadConditions();
-            Round.IsLocked = false;
+            
+            Round.IsLocked = isLocked;
         }
         
         private void LoadConditions()
