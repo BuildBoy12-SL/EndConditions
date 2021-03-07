@@ -23,7 +23,6 @@ namespace EndConditions
             EventHandlers = new EventHandlers(Config);
             ServerHandlers.EndingRound += EventHandlers.OnCheckRoundEnd;
             ServerHandlers.ReloadedConfigs += OnReloadedConfigs;
-            ServerHandlers.RoundStarted += EventHandlers.OnRoundStart;
             LoadConditions();
             base.OnEnabled();
         }
@@ -33,15 +32,14 @@ namespace EndConditions
             EventHandlers.Conditions.Clear();
             ServerHandlers.EndingRound -= EventHandlers.OnCheckRoundEnd;
             ServerHandlers.ReloadedConfigs -= OnReloadedConfigs;
-            ServerHandlers.RoundStarted -= EventHandlers.OnRoundStart;
             EventHandlers = null;
             base.OnDisabled();
         }
 
-        public override string Author => "Build";
-        public override string Name => "EndConditions";
-        public override Version RequiredExiledVersion => new(2, 3, 3);
-        public override Version Version => new(3, 1, 2);
+        public override string Author { get; } = "Build";
+        public override string Name { get; } = "EndConditions";
+        public override Version RequiredExiledVersion { get; } = new Version(2, 3, 4);
+        public override Version Version { get; } = new Version(3, 1, 3);
 
         private void OnReloadedConfigs()
         {
@@ -107,7 +105,7 @@ namespace EndConditions
                             continue;
                         }
 
-                        if (!Enum.TryParse(group.Name, out LeadingTeam leadingTeam))
+                        if (!Enum.TryParse(group.Name, true, out LeadingTeam leadingTeam))
                         {
                             Log.Error($"Unable to parse {group.Name} into a leading team. Skipping registration of condition.");
                             continue;
@@ -123,13 +121,13 @@ namespace EndConditions
                         List<string> escapeConditions = splitName.Where(item => EventHandlers.EscapeTracking.ContainsKey(item)).ToList();
                         escapeConditions.ForEach(item => splitName.Remove(item));
 
-                        EventHandlers.Conditions.Add(new Condition(escapeConditions, leadingTeam, string.Join(" ", splitName).Trim(), hold));
+                        EventHandlers.Conditions.Add(new Condition{EscapeConditions = escapeConditions, LeadingTeam = leadingTeam, Name = string.Join(" ", splitName).Trim(), RoleConditions = hold});
                     }
                 }
             }
             catch (Exception e)
             {
-                Log.Error($"Error loading win conditions for EndConditions: {e.Message}\n{e.StackTrace}");
+                Log.Error($"Error loading win conditions for EndConditions: {e}");
                 OnDisabled();
             }
         }
