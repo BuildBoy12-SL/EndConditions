@@ -1,63 +1,84 @@
 namespace EndConditions
 {
-    using Exiled.API.Enums;
-    using Exiled.API.Features;
-    using Newtonsoft.Json.Linq;
-    using Properties;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using Exiled.API.Enums;
+    using Exiled.API.Features;
+    using Newtonsoft.Json.Linq;
+    using Properties;
     using YamlDotNet.Serialization;
     using ServerHandlers = Exiled.Events.Handlers.Server;
 
+    /// <summary>
+    /// The main plugin class.
+    /// </summary>
     public class EndConditions : Plugin<Config>
     {
         private static readonly string ConfigsDirectory = Path.Combine(Paths.Configs, "EndConditions");
-        private static readonly string FileDirectory = Path.Combine(ConfigsDirectory, "config.yml");
-        internal static EventHandlers EventHandlers;
 
+        private static readonly string FileDirectory = Path.Combine(ConfigsDirectory, "config.yml");
+
+        private static readonly EndConditions InstanceValue = new EndConditions();
+
+        private EndConditions()
+        {
+        }
+
+        /// <summary>
+        /// Gets a static instance of the <see cref="EndConditions"/> class.
+        /// </summary>
+        public static EndConditions Instance { get; } = InstanceValue;
+
+        /// <inheritdoc/>
+        public override string Author { get; } = "Build";
+
+        /// <inheritdoc/>
+        public override string Name { get; } = "EndConditions";
+
+        /// <inheritdoc/>
+        public override Version RequiredExiledVersion { get; } = new Version(2, 9, 4);
+
+        /// <inheritdoc/>
+        public override Version Version { get; } = new Version(3, 1, 3);
+
+        /// <inheritdoc/>
         public override void OnEnabled()
         {
-            EventHandlers = new EventHandlers(Config);
-            ServerHandlers.EndingRound += EventHandlers.OnCheckRoundEnd;
+            ServerHandlers.EndingRound += EventHandlers.OnEndingRound;
             ServerHandlers.ReloadedConfigs += OnReloadedConfigs;
             LoadConditions();
             base.OnEnabled();
         }
 
+        /// <inheritdoc/>
         public override void OnDisabled()
         {
             EventHandlers.Conditions.Clear();
-            ServerHandlers.EndingRound -= EventHandlers.OnCheckRoundEnd;
+            ServerHandlers.EndingRound -= EventHandlers.OnEndingRound;
             ServerHandlers.ReloadedConfigs -= OnReloadedConfigs;
-            EventHandlers = null;
             base.OnDisabled();
         }
-
-        public override string Author { get; } = "Build";
-        public override string Name { get; } = "EndConditions";
-        public override Version RequiredExiledVersion { get; } = new Version(2, 3, 4);
-        public override Version Version { get; } = new Version(3, 1, 3);
 
         private void OnReloadedConfigs()
         {
             bool isLocked = Round.IsLocked;
             Round.IsLocked = true;
-            
+
             EventHandlers.Conditions.Clear();
             LoadConditions();
-            
+
             Round.IsLocked = isLocked;
         }
-        
+
         private void LoadConditions()
         {
             try
             {
                 string path = Config.UsesGlobalConfig ? FileDirectory : Path.Combine(ConfigsDirectory, Server.Port.ToString(), "config.yml");
-                
+
                 if (!Directory.Exists(ConfigsDirectory))
                     Directory.CreateDirectory(ConfigsDirectory);
 
@@ -121,7 +142,13 @@ namespace EndConditions
                         List<string> escapeConditions = splitName.Where(item => EventHandlers.EscapeTracking.ContainsKey(item)).ToList();
                         escapeConditions.ForEach(item => splitName.Remove(item));
 
-                        EventHandlers.Conditions.Add(new Condition{EscapeConditions = escapeConditions, LeadingTeam = leadingTeam, Name = string.Join(" ", splitName).Trim(), RoleConditions = hold});
+                        EventHandlers.Conditions.Add(new Condition
+                        {
+                            EscapeConditions = escapeConditions,
+                            LeadingTeam = leadingTeam,
+                            Name = string.Join(" ", splitName).Trim(),
+                            RoleConditions = hold,
+                        });
                     }
                 }
             }

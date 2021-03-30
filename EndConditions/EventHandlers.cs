@@ -1,38 +1,45 @@
 namespace EndConditions
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
-    using System.Collections.Generic;
-    using System.Linq;
+    using NorthwoodLib.Pools;
 
-    public class EventHandlers
+    public static class EventHandlers
     {
-        public EventHandlers(Config config) => _config = config;
-        private readonly Config _config;
-
+        /// <summary>
+        /// Gets the list of conditions to be used to check if the round should end.
+        /// </summary>
         public static List<Condition> Conditions { get; } = new List<Condition>();
 
-        internal readonly Dictionary<string, bool> EscapeTracking = new Dictionary<string, bool>
+        /// <summary>
+        /// Gets a dictionary to be used as a utility against escaped personnel checks.
+        /// </summary>
+        internal static Dictionary<string, bool> EscapeTracking { get; } = new Dictionary<string, bool>
         {
             ["-classd"] = false,
             ["+classd"] = false,
             ["-science"] = false,
-            ["+science"] = false
+            ["+science"] = false,
         };
 
-        public void OnCheckRoundEnd(EndingRoundEventArgs ev)
+        private static Config Config => EndConditions.Instance.Config;
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnEndingRound(EndingRoundEventArgs)"/>
+        public static void OnEndingRound(EndingRoundEventArgs ev)
         {
-            if (!_config.AllowDefaultEndConditions)
+            if (!Config.AllowDefaultEndConditions)
             {
                 ev.IsAllowed = false;
                 ev.IsRoundEnded = false;
             }
 
-            if (Warhead.IsDetonated && _config.EndOnDetonation)
+            if (Warhead.IsDetonated && Config.EndOnDetonation)
             {
-                Log.Debug("Ending the round via warhead detonation.", _config.AllowDebug);
-                EndGame(ev, _config.DetonationWinner);
+                Log.Debug("Ending the round via warhead detonation.", Config.AllowDebug);
+                EndGame(ev, Config.DetonationWinner);
                 return;
             }
 
@@ -44,30 +51,37 @@ namespace EndConditions
             IEnumerable<string> roles = GetRoles();
 
             // Pull all the lists from the core dictionary and check em
-            foreach (var condition in Conditions.Where(condition => !roles.Except(condition.RoleConditions).Any()))
+            foreach (Condition condition in Conditions.Where(condition => !roles.Except(condition.RoleConditions).Any()))
             {
-                Log.Debug($"Using conditions from condition name: '{condition.Name}'", _config.AllowDebug);
+                Log.Debug($"Using conditions from condition name: '{condition.Name}'", Config.AllowDebug);
 
                 // Check escape conditions
-                List<string> failedConditions = condition.EscapeConditions.Where(cond => !EscapeTracking[cond]).ToList();
+                List<string> failedConditions = ListPool<string>.Shared.Rent(condition.EscapeConditions.Where(cond => !EscapeTracking[cond]));
                 if (failedConditions.Count > 0)
-                { 
-                    Log.Debug($"Escape conditions failed at: {string.Join(", ", failedConditions)}", _config.AllowDebug); 
+                {
+                    Log.Debug($"Escape conditions failed at: {string.Join(", ", failedConditions)}", Config.AllowDebug);
+                    ListPool<string>.Shared.Return(failedConditions);
                     continue;
                 }
-
-                Log.Debug("Escape checks passed, ending round.", _config.AllowDebug);
+                
+                Log.Debug($"Escape checks passed: {string.Join(", ", condition.EscapeConditions)}", Config.AllowDebug);
+                ListPool<string>.Shared.Return(failedConditions);
                 EndGame(ev, condition.LeadingTeam);
                 return;
             }
         }
 
-        private IEnumerable<string> GetRoles()
+        private static IEnumerable<string> GetRoles()
         {
             foreach (Player ply in Player.List)
             {
-                if (string.IsNullOrEmpty(ply.UserId) || ply.Role == RoleType.Spectator || API.BlacklistedPlayers.Contains(ply))
+                if (ply == null ||
+                    string.IsNullOrEmpty(ply.UserId) ||
+                    ply.Role == RoleType.Spectator ||
+                    API.BlacklistedPlayers.Contains(ply))
+                {
                     continue;
+                }
 
                 if (API.ModifiedRoles.TryGetValue(ply, out string modifiedRole))
                 {
@@ -81,14 +95,14 @@ namespace EndConditions
                     continue;
                 }
 
-                if (ply.Role == RoleType.Tutorial && _config.IgnoreTutorials)
+                if (ply.Role == RoleType.Tutorial && Config.IgnoreTutorials)
                     continue;
-                
+
                 yield return ply.Role.ToString().ToLower();
             }
         }
 
-        private void EndGame(EndingRoundEventArgs ev, LeadingTeam leadingTeam)
+        private static void EndGame(EndingRoundEventArgs ev, LeadingTeam leadingTeam)
         {
             ev.LeadingTeam = leadingTeam;
             ev.IsAllowed = true;
@@ -100,9 +114,9 @@ namespace EndConditions
             API.BlacklistedPlayers.Clear();
             API.ModifiedRoles.Clear();
 
-            Log.Debug($"Force ending with {ev.LeadingTeam} as the lead team.", _config.AllowDebug);
+            Log.Debug($"Force ending with {ev.LeadingTeam} as the lead team.", Config.AllowDebug);
 
-            if (_config.RoundEndFf)
+            if (Config.RoundEndFf)
             {
                 foreach (var player in Player.List)
                 {

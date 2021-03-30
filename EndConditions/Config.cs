@@ -1,32 +1,55 @@
 ﻿namespace EndConditions
 {
+    using System.ComponentModel;
     using Exiled.API.Enums;
     using Exiled.API.Interfaces;
-    using System.ComponentModel;
 
+    /// <inheritdoc cref="IConfig"/>
     public sealed class Config : IConfig
     {
+        /// <inheritdoc/>
         public bool IsEnabled { get; set; } = true;
 
-        [Description("Enable if the server should use the global EndConditions config.")]
+        /// <summary>
+        /// Gets or sets a value indicating whether the server will use the global EndConditions config.
+        /// </summary>
+        [Description("Whether the server will use the global EndConditions config.")]
         public bool UsesGlobalConfig { get; set; } = true;
 
-        [Description("Enable if the plugin should send debug messages.")]
+        /// <summary>
+        /// Gets or sets a value indicating whether debug messages will be displayed.
+        /// </summary>
+        [Description("Whether debug messages will be displayed.")]
         public bool AllowDebug { get; set; } = false;
 
-        [Description("Enable if the plugin should allow the games default win conditions as well as the configured ones.")]
+        /// <summary>
+        /// Gets or sets a value indicating whether the plugin should allow the games default win conditions to also be read.
+        /// </summary>
+        [Description("Whether the plugin should allow the games default win conditions to also be read.")]
         public bool AllowDefaultEndConditions { get; set; } = false;
 
-        [Description("If detonation winner will be used.")]
+        /// <summary>
+        /// Gets or sets a value indicating whether <see cref="DetonationWinner"/> will be used.
+        /// </summary>
+        [Description("Whether Detonation Winner will be used..")]
         public bool EndOnDetonation { get; set; } = false;
-        
-        [Description("Who should win if the warhead detonates.")]
+
+        /// <summary>
+        /// Gets or sets the team that will win when the warhead detonates.
+        /// </summary>
+        [Description("The team that will win when the warhead detonates.")]
         public LeadingTeam DetonationWinner { get; set; } = LeadingTeam.FacilityForces;
 
-        [Description("If tutorials should be ignored as normal, disable if you have plugins like SerpentsHand and set conditions accordingly.")]
+        /// <summary>
+        /// Gets or sets a value indicating whether tutorials will be ignored while checking if the round should end.
+        /// </summary>
+        [Description("Whether tutorials will be ignored while checking if the round should end.")]
         public bool IgnoreTutorials { get; set; } = true;
 
-        [Description("Enables FriendlyFire when the round ends when enabled.")]
+        /// <summary>
+        /// Gets or sets a value indicating whether friendly fire will be enabled when the round ends.
+        /// </summary>
+        [Description("Whether friendly fire will be enabled when the round ends.")]
         public bool RoundEndFf { get; set; } = false;
     }
 }
