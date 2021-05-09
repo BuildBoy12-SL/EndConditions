@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------
+// <copyright file="EventHandlers.cs" company="Build">
+// Copyright (c) Build. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace EndConditions
 {
     using System.Collections.Generic;
@@ -7,6 +14,9 @@ namespace EndConditions
     using Exiled.Events.EventArgs;
     using NorthwoodLib.Pools;
 
+    /// <summary>
+    /// Contains methods which use events in <see cref="Exiled.Events.Handlers"/>.
+    /// </summary>
     public static class EventHandlers
     {
         /// <summary>
@@ -25,7 +35,7 @@ namespace EndConditions
             ["+science"] = false,
         };
 
-        private static Config Config => EndConditions.Instance.Config;
+        private static Config Config => Plugin.Instance.Config;
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnEndingRound(EndingRoundEventArgs)"/>
         public static void OnEndingRound(EndingRoundEventArgs ev)
@@ -63,7 +73,7 @@ namespace EndConditions
                     ListPool<string>.Shared.Return(failedConditions);
                     continue;
                 }
-                
+
                 Log.Debug($"Escape checks passed: {string.Join(", ", condition.EscapeConditions)}", Config.AllowDebug);
                 ListPool<string>.Shared.Return(failedConditions);
                 EndGame(ev, condition.LeadingTeam);

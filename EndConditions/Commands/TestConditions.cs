@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------
+// <copyright file="TestConditions.cs" company="Build">
+// Copyright (c) Build. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace EndConditions.Commands
 {
     using System;
@@ -6,11 +13,14 @@ namespace EndConditions.Commands
     using Exiled.Events.EventArgs;
     using Exiled.Permissions.Extensions;
 
+    /// <summary>
+    /// A command to fire <see cref="EventHandlers.OnEndingRound"/> once to check debug outputs.
+    /// </summary>
     [CommandHandler(typeof(GameConsoleCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class TestConditions : ICommand
     {
-        private readonly EndingRoundEventArgs testEvent = new EndingRoundEventArgs(LeadingTeam.Draw, default, false);
+        private static readonly EndingRoundEventArgs TestEvent = new EndingRoundEventArgs(LeadingTeam.Draw, default, false);
 
         /// <inheritdoc/>
         public string Command { get; } = "testconditions";
@@ -30,7 +40,7 @@ namespace EndConditions.Commands
                 return false;
             }
 
-            EventHandlers.OnEndingRound(testEvent);
+            EventHandlers.OnEndingRound(TestEvent);
             response = "Fired event.";
             return true;
         }

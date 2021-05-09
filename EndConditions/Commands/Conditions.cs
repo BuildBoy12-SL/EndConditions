@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------
+// <copyright file="Conditions.cs" company="Build">
+// Copyright (c) Build. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace EndConditions.Commands
 {
     using System;
@@ -5,6 +12,9 @@ namespace EndConditions.Commands
     using CommandSystem;
     using NorthwoodLib.Pools;
 
+    /// <summary>
+    /// A command to view all saved round conditions.
+    /// </summary>
     [CommandHandler(typeof(GameConsoleCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Conditions : ICommand

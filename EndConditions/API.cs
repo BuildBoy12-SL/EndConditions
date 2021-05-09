@@ -1,8 +1,18 @@
+// -----------------------------------------------------------------------
+// <copyright file="API.cs" company="Build">
+// Copyright (c) Build. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace EndConditions
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
 
+    /// <summary>
+    /// Contains varying properties and methods for other plugins to interact with.
+    /// </summary>
     public static class API
     {
         /// <summary>
