@@ -40,16 +40,7 @@ namespace EndConditions
         public static Plugin Instance { get; } = InstanceValue;
 
         /// <inheritdoc/>
-        public override string Author { get; } = "Build";
-
-        /// <inheritdoc/>
-        public override string Name { get; } = "EndConditions";
-
-        /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(2, 9, 4);
-
-        /// <inheritdoc/>
-        public override Version Version { get; } = new Version(3, 1, 4);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
