@@ -4,15 +4,12 @@
       <TargetFramework>net472</TargetFramework>
       <RootNamespace>EndConditions</RootNamespace>
       <AssemblyName>EndConditions</AssemblyName>
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
       <Authors>Build</Authors>
       <Version>3.2.0</Version>
       <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
       <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
       <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
