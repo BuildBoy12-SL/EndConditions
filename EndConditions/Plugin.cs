@@ -40,7 +40,7 @@ namespace EndConditions
         public static Plugin Instance { get; } = InstanceValue;
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
