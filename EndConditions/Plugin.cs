@@ -25,26 +25,26 @@ namespace EndConditions
     public class Plugin : Plugin<Config>
     {
         private static readonly string ConfigsDirectory = Path.Combine(Paths.Configs, "EndConditions");
-
         private static readonly string FileDirectory = Path.Combine(ConfigsDirectory, "config.yml");
 
-        private static readonly Plugin InstanceValue = new Plugin();
-
-        private Plugin()
-        {
-        }
+        /// <summary>
+        /// Gets the only existing instance of the <see cref="Plugin"/> class.
+        /// </summary>
+        public static Plugin Instance { get; private set; }
 
         /// <summary>
-        /// Gets a static instance of the <see cref="Plugin"/> class.
+        /// Gets an instance of the <see cref="EndConditions.EventHandlers"/> class.
         /// </summary>
-        public static Plugin Instance { get; } = InstanceValue;
+        public EventHandlers EventHandlers { get; private set; }
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
         {
+            Instance = this;
+            EventHandlers = new EventHandlers(this);
             ServerHandlers.EndingRound += EventHandlers.OnEndingRound;
             ServerHandlers.ReloadedConfigs += OnReloadedConfigs;
             LoadConditions();
@@ -57,6 +57,8 @@ namespace EndConditions
             EventHandlers.Conditions.Clear();
             ServerHandlers.EndingRound -= EventHandlers.OnEndingRound;
             ServerHandlers.ReloadedConfigs -= OnReloadedConfigs;
+            EventHandlers = null;
+            Instance = null;
             base.OnDisabled();
         }
 

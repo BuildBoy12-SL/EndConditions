@@ -17,8 +17,16 @@ namespace EndConditions
     /// <summary>
     /// Contains methods which use events in <see cref="Exiled.Events.Handlers"/>.
     /// </summary>
-    public static class EventHandlers
+    public class EventHandlers
     {
+        private readonly Plugin plugin;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventHandlers"/> class.
+        /// </summary>
+        /// <param name="plugin">An instance of the <see cref="Plugin"/> class.</param>
+        public EventHandlers(Plugin plugin) => this.plugin = plugin;
+
         /// <summary>
         /// Gets the list of conditions to be used to check if the round should end.
         /// </summary>
@@ -35,21 +43,19 @@ namespace EndConditions
             ["+science"] = false,
         };
 
-        private static Config Config => Plugin.Instance.Config;
-
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnEndingRound(EndingRoundEventArgs)"/>
-        public static void OnEndingRound(EndingRoundEventArgs ev)
+        public void OnEndingRound(EndingRoundEventArgs ev)
         {
-            if (!Config.AllowDefaultEndConditions)
+            if (!plugin.Config.AllowDefaultEndConditions)
             {
                 ev.IsAllowed = false;
                 ev.IsRoundEnded = false;
             }
 
-            if (Warhead.IsDetonated && Config.EndOnDetonation)
+            if (Warhead.IsDetonated && plugin.Config.EndOnDetonation)
             {
-                Log.Debug("Ending the round via warhead detonation.", Config.AllowDebug);
-                EndGame(ev, Config.DetonationWinner);
+                Log.Debug("Ending the round via warhead detonation.", plugin.Config.AllowDebug);
+                EndGame(ev, plugin.Config.DetonationWinner);
                 return;
             }
 
@@ -63,25 +69,25 @@ namespace EndConditions
             // Pull all the lists from the core dictionary and check em
             foreach (Condition condition in Conditions.Where(condition => !roles.Except(condition.RoleConditions).Any()))
             {
-                Log.Debug($"Using conditions from condition name: '{condition.Name}'", Config.AllowDebug);
+                Log.Debug($"Using conditions from condition name: '{condition.Name}'", plugin.Config.AllowDebug);
 
                 // Check escape conditions
                 List<string> failedConditions = ListPool<string>.Shared.Rent(condition.EscapeConditions.Where(cond => !EscapeTracking[cond]));
                 if (failedConditions.Count > 0)
                 {
-                    Log.Debug($"Escape conditions failed at: {string.Join(", ", failedConditions)}", Config.AllowDebug);
+                    Log.Debug($"Escape conditions failed at: {string.Join(", ", failedConditions)}", plugin.Config.AllowDebug);
                     ListPool<string>.Shared.Return(failedConditions);
                     continue;
                 }
 
-                Log.Debug($"Escape checks passed: {string.Join(", ", condition.EscapeConditions)}", Config.AllowDebug);
+                Log.Debug($"Escape checks passed: {string.Join(", ", condition.EscapeConditions)}", plugin.Config.AllowDebug);
                 ListPool<string>.Shared.Return(failedConditions);
                 EndGame(ev, condition.LeadingTeam);
                 return;
             }
         }
 
-        private static IEnumerable<string> GetRoles()
+        private IEnumerable<string> GetRoles()
         {
             foreach (Player ply in Player.List)
             {
@@ -105,14 +111,14 @@ namespace EndConditions
                     continue;
                 }
 
-                if (ply.Role == RoleType.Tutorial && Config.IgnoreTutorials)
+                if (ply.Role == RoleType.Tutorial && plugin.Config.IgnoreTutorials)
                     continue;
 
                 yield return ply.Role.ToString().ToLower();
             }
         }
 
-        private static void EndGame(EndingRoundEventArgs ev, LeadingTeam leadingTeam)
+        private void EndGame(EndingRoundEventArgs ev, LeadingTeam leadingTeam)
         {
             ev.LeadingTeam = leadingTeam;
             ev.IsAllowed = true;
@@ -124,9 +130,9 @@ namespace EndConditions
             API.BlacklistedPlayers.Clear();
             API.ModifiedRoles.Clear();
 
-            Log.Debug($"Force ending with {ev.LeadingTeam} as the lead team.", Config.AllowDebug);
+            Log.Debug($"Force ending with {ev.LeadingTeam} as the lead team.", plugin.Config.AllowDebug);
 
-            if (Config.RoundEndFf)
+            if (plugin.Config.RoundEndFf)
             {
                 foreach (var player in Player.List)
                 {

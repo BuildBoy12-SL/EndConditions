@@ -40,7 +40,7 @@ namespace EndConditions.Commands
                 return false;
             }
 
-            EventHandlers.OnEndingRound(TestEvent);
+            Plugin.Instance.EventHandlers.OnEndingRound(TestEvent);
             response = "Fired event.";
             return true;
         }
