@@ -59,10 +59,10 @@ namespace EndConditions
                 return;
             }
 
-            EscapeTracking["-classd"] = RoundSummary.escaped_ds == 0;
-            EscapeTracking["+classd"] = RoundSummary.escaped_ds > 0;
-            EscapeTracking["-science"] = RoundSummary.escaped_scientists == 0;
-            EscapeTracking["+science"] = RoundSummary.escaped_scientists > 0;
+            EscapeTracking["-classd"] = RoundSummary.EscapedClassD == 0;
+            EscapeTracking["+classd"] = RoundSummary.EscapedClassD > 0;
+            EscapeTracking["-science"] = RoundSummary.EscapedScientists == 0;
+            EscapeTracking["+science"] = RoundSummary.EscapedScientists > 0;
 
             IEnumerable<string> roles = GetRoles();
 
