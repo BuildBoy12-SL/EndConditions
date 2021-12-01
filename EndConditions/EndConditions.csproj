@@ -6,7 +6,7 @@
       <AssemblyName>EndConditions</AssemblyName>
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
       <Authors>Build</Authors>
-      <Version>3.2.0</Version>
+      <Version>3.3.0</Version>
       <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
       <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
       <GenerateDocumentationFile>true</GenerateDocumentationFile>

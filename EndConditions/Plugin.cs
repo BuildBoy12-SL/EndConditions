@@ -38,7 +38,7 @@ namespace EndConditions
         public EventHandlers EventHandlers { get; private set; }
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 5);
+        public override Version RequiredExiledVersion { get; } = new Version(4, 0, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
