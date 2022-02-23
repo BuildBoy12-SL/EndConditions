@@ -39,7 +39,9 @@ namespace EndConditions.Commands
             {
                 foreach (Condition condition in kvp.Value)
                 {
-                    stringBuilder.AppendLine().AppendLine(condition.Name).AppendLine($"Leading Team: {kvp.Key}")
+                    stringBuilder.AppendLine()
+                        .AppendLine(condition.Name)
+                        .AppendLine($"Leading Team: {kvp.Key}")
                         .AppendLine($"Escape Conditions: {condition.EscapeCondition}")
                         .AppendLine($"Roles: {string.Join(", ", condition.RoleConditions)}");
                 }

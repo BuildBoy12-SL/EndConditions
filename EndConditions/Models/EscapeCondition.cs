@@ -56,8 +56,8 @@ namespace EndConditions.Models
 
         private bool CheckRestricted()
         {
-            return (Round.EscapedDClasses <= 0 || ClassD != EscapeRequirement.Restricted) &&
-                   (Round.EscapedScientists <= 0 || Scientists != EscapeRequirement.Restricted);
+            return (Round.EscapedDClasses == 0 || ClassD != EscapeRequirement.Restricted) &&
+                   (Round.EscapedScientists == 0 || Scientists != EscapeRequirement.Restricted);
         }
 
         private bool CheckRequired()
