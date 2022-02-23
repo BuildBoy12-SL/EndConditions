@@ -52,5 +52,8 @@ namespace EndConditions
 
             ListPool<string>.Shared.Return(roles);
         }
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnReloadedConfigs()"/>
+        public void OnReloadedConfigs() => plugin.Config.LoadConditions();
     }
 }

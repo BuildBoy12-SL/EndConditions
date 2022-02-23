@@ -39,7 +39,7 @@ namespace EndConditions
             Methods = new Methods(this);
             eventHandlers = new EventHandlers(this);
             ServerHandlers.EndingRound += eventHandlers.OnEndingRound;
-            ServerHandlers.ReloadedConfigs += OnReloadedConfigs;
+            ServerHandlers.ReloadedConfigs += eventHandlers.OnReloadedConfigs;
             base.OnEnabled();
         }
 
@@ -47,13 +47,11 @@ namespace EndConditions
         public override void OnDisabled()
         {
             ServerHandlers.EndingRound -= eventHandlers.OnEndingRound;
-            ServerHandlers.ReloadedConfigs -= OnReloadedConfigs;
+            ServerHandlers.ReloadedConfigs -= eventHandlers.OnReloadedConfigs;
             eventHandlers = null;
             Methods = null;
             Instance = null;
             base.OnDisabled();
         }
-
-        private void OnReloadedConfigs() => Config.LoadConditions();
     }
 }
