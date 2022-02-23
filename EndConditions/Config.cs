@@ -8,37 +8,36 @@
 namespace EndConditions
 {
     using System.ComponentModel;
+    using System.IO;
+    using EndConditions.Configs;
     using Exiled.API.Enums;
+    using Exiled.API.Features;
     using Exiled.API.Interfaces;
+    using Exiled.Loader;
+    using YamlDotNet.Serialization;
 
     /// <inheritdoc cref="IConfig"/>
     public sealed class Config : IConfig
     {
+        /// <summary>
+        /// Gets the config containing the win conditions.
+        /// </summary>
+        [YamlIgnore]
+        public WinConditionsConfig WinConditions { get; private set; }
+
         /// <inheritdoc/>
         public bool IsEnabled { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the server will use the global EndConditions config.
+        /// Gets or sets the name of the file to store the win conditions config in.
         /// </summary>
-        [Description("Whether the server will use the global EndConditions config.")]
-        public bool UsesGlobalConfig { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether debug messages will be displayed.
-        /// </summary>
-        [Description("Whether debug messages will be displayed.")]
-        public bool AllowDebug { get; set; } = false;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the plugin should allow the games default win conditions to also be read.
-        /// </summary>
-        [Description("Whether the plugin should allow the games default win conditions to also be read.")]
-        public bool AllowDefaultEndConditions { get; set; } = false;
+        [Description("The name of the file to store the win conditions config in.")]
+        public string FileName { get; set; } = "global.yml";
 
         /// <summary>
         /// Gets or sets a value indicating whether <see cref="DetonationWinner"/> will be used.
         /// </summary>
-        [Description("Whether Detonation Winner will be used..")]
+        [Description("Whether Detonation Winner will be used.")]
         public bool EndOnDetonation { get; set; } = false;
 
         /// <summary>
@@ -58,5 +57,22 @@ namespace EndConditions
         /// </summary>
         [Description("Whether friendly fire will be enabled when the round ends.")]
         public bool RoundEndFf { get; set; } = false;
+
+        /// <summary>
+        /// Loads the win condition config.
+        /// </summary>
+        public void LoadConditions()
+        {
+            string folderPath = Path.Combine(Paths.Configs, "EndConditions");
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            string filePath = Path.Combine(folderPath, FileName);
+            WinConditions = !File.Exists(filePath)
+                ? new WinConditionsConfig()
+                : Loader.Deserializer.Deserialize<WinConditionsConfig>(File.ReadAllText(filePath));
+
+            File.WriteAllText(filePath, Loader.Serializer.Serialize(WinConditions));
+        }
     }
 }
