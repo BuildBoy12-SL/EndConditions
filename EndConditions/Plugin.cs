@@ -54,12 +54,6 @@ namespace EndConditions
             base.OnDisabled();
         }
 
-        private void OnReloadedConfigs()
-        {
-            bool isLocked = Round.IsLocked;
-            Round.IsLocked = true;
-            Config.LoadConditions();
-            Round.IsLocked = isLocked;
-        }
+        private void OnReloadedConfigs() => Config.LoadConditions();
     }
 }
