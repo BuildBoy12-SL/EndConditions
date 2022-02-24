@@ -40,6 +40,7 @@ namespace EndConditions
             eventHandlers = new EventHandlers(this);
             ServerHandlers.EndingRound += eventHandlers.OnEndingRound;
             ServerHandlers.ReloadedConfigs += eventHandlers.OnReloadedConfigs;
+            ServerHandlers.WaitingForPlayers += eventHandlers.OnWaitingForPlayers;
             base.OnEnabled();
         }
 
@@ -48,6 +49,7 @@ namespace EndConditions
         {
             ServerHandlers.EndingRound -= eventHandlers.OnEndingRound;
             ServerHandlers.ReloadedConfigs -= eventHandlers.OnReloadedConfigs;
+            ServerHandlers.WaitingForPlayers -= eventHandlers.OnWaitingForPlayers;
             eventHandlers = null;
             Methods = null;
             Instance = null;
