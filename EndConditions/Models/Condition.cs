@@ -37,7 +37,7 @@ namespace EndConditions.Models
         /// </summary>
         /// <param name="roles">The alive roles in the current round.</param>
         /// <returns>A value indicating whether the round info matches the parameters of the condition.</returns>
-        public bool Check(IEnumerable<string> roles)
+        public bool Check(List<string> roles)
         {
             if (roles == null)
                 throw new ArgumentNullException(nameof(roles));
@@ -45,7 +45,7 @@ namespace EndConditions.Models
             if (EscapeCondition == null || RoleConditions == null)
                 return false;
 
-            return EscapeCondition.Check() && !roles.Except(RoleConditions, StringComparer.OrdinalIgnoreCase).Any();
+            return EscapeCondition.Check(roles) && !roles.Except(RoleConditions, StringComparer.OrdinalIgnoreCase).Any();
         }
     }
 }

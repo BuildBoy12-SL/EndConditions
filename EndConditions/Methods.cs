@@ -68,7 +68,10 @@ namespace EndConditions
             API.ModifiedRoles.Clear();
 
             if (plugin.Config.RoundEndFf)
-                Server.FriendlyFire = true;
+            {
+                foreach (Player player in Player.List)
+                    player.IsFriendlyFireEnabled = true;
+            }
         }
     }
 }

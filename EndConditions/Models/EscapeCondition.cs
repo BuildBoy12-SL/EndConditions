@@ -8,6 +8,7 @@
 namespace EndConditions.Models
 {
     using System;
+    using System.Collections.Generic;
     using EndConditions.Enums;
     using Exiled.API.Features;
 
@@ -48,22 +49,27 @@ namespace EndConditions.Models
         /// <summary>
         /// Compares the requirements of the condition against the round's data.
         /// </summary>
+        /// <param name="roles">The alive roles in the current round.</param>
         /// <returns>Whether the round's current escapes matches the specified parameters.</returns>
-        public bool Check() => CheckRestricted() && CheckRequired();
+        public bool Check(List<string> roles) => CheckRestricted(roles) && CheckRequired(roles);
 
         /// <inheritdoc />
         public override string ToString() => $"ClassD: {ClassD} | Scientists: {Scientists}";
 
-        private bool CheckRestricted()
+        private bool CheckRestricted(List<string> roles)
         {
-            return (Round.EscapedDClasses == 0 || ClassD != EscapeRequirement.Restricted) &&
-                   (Round.EscapedScientists == 0 || Scientists != EscapeRequirement.Restricted);
+            return ((Round.EscapedDClasses == 0 && !ClassDAlive(roles)) || ClassD != EscapeRequirement.Restricted) &&
+                   ((Round.EscapedScientists == 0 && !ScientistAlive(roles)) || Scientists != EscapeRequirement.Restricted);
         }
 
-        private bool CheckRequired()
+        private bool CheckRequired(List<string> roles)
         {
-            return (Round.EscapedDClasses > 0 || ClassD != EscapeRequirement.Required) &&
-                   (Round.EscapedScientists > 0 || Scientists != EscapeRequirement.Required);
+            return (Round.EscapedDClasses > 0 || ClassDAlive(roles) || ClassD != EscapeRequirement.Required) &&
+                   (Round.EscapedScientists > 0 || ScientistAlive(roles) || Scientists != EscapeRequirement.Required);
         }
+
+        private bool ClassDAlive(List<string> roles) => roles.Contains("ClassD", StringComparison.OrdinalIgnoreCase);
+
+        private bool ScientistAlive(List<string> roles) => roles.Contains("Scientist", StringComparison.OrdinalIgnoreCase);
     }
 }
