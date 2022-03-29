@@ -34,6 +34,7 @@ namespace EndConditions
             foreach (Player player in Player.List)
             {
                 if (string.IsNullOrEmpty(player.UserId) ||
+                    player.SessionVariables.ContainsKey("IsNPC") ||
                     player.IsDead ||
                     API.BlacklistedPlayers.Contains(player))
                 {

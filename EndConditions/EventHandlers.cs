@@ -22,6 +22,7 @@ namespace EndConditions
     public class EventHandlers
     {
         private readonly Plugin plugin;
+        private bool endOnOne;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventHandlers"/> class.
@@ -42,6 +43,12 @@ namespace EndConditions
             }
 
             List<string> roles = ListPool<string>.Shared.Rent(plugin.Methods.GetRoles());
+            if (!endOnOne && roles.Count < 2)
+            {
+                ListPool<string>.Shared.Return(roles);
+                return;
+            }
+
             foreach (KeyValuePair<LeadingTeam, List<Condition>> kvp in plugin.Config.WinConditions.Conditions)
             {
                 if (!kvp.Value.Any(condition => condition.Check(roles)))
@@ -58,6 +65,10 @@ namespace EndConditions
         public void OnReloadedConfigs() => plugin.Config.LoadConditions();
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers()"/>
-        public void OnWaitingForPlayers() => Server.FriendlyFire = ConfigFile.ServerConfig.GetBool("friendly_fire");
+        public void OnWaitingForPlayers()
+        {
+            Server.FriendlyFire = ConfigFile.ServerConfig.GetBool("friendly_fire");
+            endOnOne = ConfigFile.ServerConfig.GetBool("end_round_on_one_player");
+        }
     }
 }
