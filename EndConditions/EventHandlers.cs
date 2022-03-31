@@ -22,7 +22,6 @@ namespace EndConditions
     public class EventHandlers
     {
         private readonly Plugin plugin;
-        private bool endOnOne;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventHandlers"/> class.
@@ -62,7 +61,6 @@ namespace EndConditions
         public void OnWaitingForPlayers()
         {
             Server.FriendlyFire = ConfigFile.ServerConfig.GetBool("friendly_fire");
-            endOnOne = ConfigFile.ServerConfig.GetBool("end_round_on_one_player");
         }
     }
 }
