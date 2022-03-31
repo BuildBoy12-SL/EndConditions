@@ -43,12 +43,6 @@ namespace EndConditions
             }
 
             List<string> roles = ListPool<string>.Shared.Rent(plugin.Methods.GetRoles());
-            if (!endOnOne && roles.Count < 2)
-            {
-                ListPool<string>.Shared.Return(roles);
-                return;
-            }
-
             foreach (KeyValuePair<LeadingTeam, List<Condition>> kvp in plugin.Config.WinConditions.Conditions)
             {
                 if (!kvp.Value.Any(condition => condition.Check(roles)))
