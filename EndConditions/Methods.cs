@@ -33,13 +33,8 @@ namespace EndConditions
         {
             foreach (Player player in Player.List)
             {
-                if (string.IsNullOrEmpty(player.UserId) ||
-                    player.SessionVariables.ContainsKey("IsNPC") ||
-                    player.IsDead ||
-                    API.BlacklistedPlayers.Contains(player))
-                {
+                if (player.IsDead || API.BlacklistedPlayers.Contains(player))
                     continue;
-                }
 
                 if (API.ModifiedRoles.TryGetValue(player, out string modifiedRole))
                 {
