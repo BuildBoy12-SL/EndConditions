@@ -1,46 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-      <TargetFramework>net472</TargetFramework>
-      <RootNamespace>EndConditions</RootNamespace>
-      <AssemblyName>EndConditions</AssemblyName>
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <Authors>Build</Authors>
-      <Version>3.3.0</Version>
-      <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-      <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-      <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <AssemblyName>EndConditions</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Authors>Build</Authors>
+    <Version>4.0.0</Version>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="EXILED" Version="4.0.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-      <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
-      <PackageReference Include="YamlDotNet" Version="9.1.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EXILED" Version="5.3.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
+    <PackageReference Include="YamlDotNet" Version="9.1.0" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="Assembly-CSharp" HintPath="$(EXILED_References)\Assembly-CSharp-Publicized.dll" Private="false" />
-      <Reference Include="Assembly-CSharp-firstpass" HintPath="$(EXILED_References)\Assembly-CSharp-firstpass.dll" Private="false" />
-      <Reference Include="CommandSystem.Core" HintPath="$(EXILED_References)\CommandSystem.Core.dll" Private="false" />
-      <Reference Include="Mirror" HintPath="$(EXILED_References)\Mirror.dll" Private="false" />
-      <Reference Include="NorthwoodLib" HintPath="$(EXILED_References)\NorthwoodLib.dll" Private="false" />
-      <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_References)\UnityEngine.CoreModule.dll" Private="false" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Properties\Resources.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Resources.resx</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Update="Properties\Resources.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-    </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(EXILED_References)\Assembly-CSharp-firstpass.dll" Private="false" />
+    <Reference Include="Mirror" HintPath="$(EXILED_References)\Mirror.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_References)\UnityEngine.CoreModule.dll" Private="false" />
+  </ItemGroup>
 
 </Project>

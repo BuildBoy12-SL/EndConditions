@@ -1,20 +1,17 @@
 # EndConditions
-- Grants the ability to set custom round end conditions using [EXILED](https://github.com/galaxy119/EXILED/).
-- Requires the included Newtonsoft.Json.dll as a dependency.
+- Grants the ability to set custom round end conditions using [EXILED](https://github.com/Exiled-Team/EXILED/).
 
 ## EXILED Configs:
 | Config Option | Value Type | Default Value | Description |
 |:------------------------:|:----------:|:-------------:|:------------------------------------------:|
 | `is_enabled` | bool | true | Enables/Disables the plugin. |
-| `uses_global_config` | bool | true | Determines if the server reads from the central config file, otherwise it makes a new one. |
-| `allow_debug` | bool | false | Enables/Disables printing of various debug messages. |
-| `allow_default_end_conditions` | bool | false | Enables/Disables the use of base game round end conditions. |
-| `end_on_detonation` | bool | false | Enables/Disables the round ending when the warhead detonates.. |
-| `detonation_winner` | LeadingTeam | FacilityForces | Determines who will win when the warhead detonates using LeadingTeam names. |
-| `ignore_tutorials` | bool | true | Determines if tutorials are calculated as a player. |
-| `round_end_ff` | bool | false | Determines if FriendlyFire should be enabled when the round ends. |
+| `file_name` | bool | global.yml | The name of the file to store the win conditions config in. |
+| `end_on_detonation` | bool | false | Whether Detonation Winner will be used. |
+| `detonation_winner` | LeadingTeam | FacilityForces | The team that will win when the warhead detonates. |
+| `ignore_tutorials` | bool | true | Whether tutorials will be ignored while checking if the round should end. |
+| `round_end_ff` | bool | false | Whether friendly fire will be enabled when the round ends. |
 
-- The configs file for EndConditions, used for win conditions and not the above configs, is located at __/EXILED/Configs/EndConditions/config.yml__ by default.
+- The win condition configs file for EndConditions is located at __/EXILED/Configs/EndConditions/global.yml__ by default.
 
 ## Leading team names:
 - FacilityForces
@@ -32,7 +29,10 @@
 - Scp93953
 - Scp93989
 - NtfScientist
-- ChaosInsurgency
+- ChaosConscript
+- ChaosRifleman
+- ChaosRepressor
+- ChaosMarauder
 - NtfLieutenant
 - NtfCommander
 - NtfCadet

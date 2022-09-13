@@ -8,8 +8,11 @@
 namespace EndConditions.Commands
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using CommandSystem;
+    using EndConditions.Models;
+    using Exiled.API.Enums;
     using NorthwoodLib.Pools;
 
     /// <summary>
@@ -20,23 +23,28 @@ namespace EndConditions.Commands
     public class Conditions : ICommand
     {
         /// <inheritdoc/>
-        public string Command { get; } = "conditions";
+        public string Command => "conditions";
 
         /// <inheritdoc/>
         public string[] Aliases { get; } = Array.Empty<string>();
 
         /// <inheritdoc/>
-        public string Description { get; } = "Lists all current conditions.";
+        public string Description => "Lists all current conditions.";
 
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
-            foreach (Condition condition in EventHandlers.Conditions)
+            foreach (KeyValuePair<LeadingTeam, List<Condition>> kvp in Plugin.Instance.Config.WinConditions.Conditions)
             {
-                stringBuilder.AppendLine().AppendLine(condition.Name).AppendLine($"Leading Team: {condition.LeadingTeam}")
-                    .AppendLine($"Escape Conditions: {string.Join(", ", condition.EscapeConditions)}")
-                    .AppendLine($"Roles: {string.Join(", ", condition.RoleConditions)}");
+                foreach (Condition condition in kvp.Value)
+                {
+                    stringBuilder.AppendLine()
+                        .AppendLine(condition.Name)
+                        .AppendLine($"Leading Team: {kvp.Key}")
+                        .AppendLine($"Escape Conditions: {condition.EscapeCondition}")
+                        .AppendLine($"Roles: {string.Join(", ", condition.RoleConditions)}");
+                }
             }
 
             response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
