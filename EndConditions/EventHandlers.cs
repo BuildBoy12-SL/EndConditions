@@ -54,13 +54,7 @@ namespace EndConditions
             ListPool<string>.Shared.Return(roles);
         }
 
-        /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnReloadedConfigs()"/>
-        public void OnReloadedConfigs() => plugin.Config.LoadConditions();
-
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers()"/>
-        public void OnWaitingForPlayers()
-        {
-            Server.FriendlyFire = ConfigFile.ServerConfig.GetBool("friendly_fire");
-        }
+        public void OnWaitingForPlayers() => Server.FriendlyFire = ConfigFile.ServerConfig.GetBool("friendly_fire");
     }
 }

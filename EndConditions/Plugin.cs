@@ -29,17 +29,15 @@ namespace EndConditions
         public Methods Methods { get; private set; }
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new(5, 3, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
         {
             Instance = this;
-            Config.LoadConditions();
             Methods = new Methods(this);
             eventHandlers = new EventHandlers(this);
             ServerHandlers.EndingRound += eventHandlers.OnEndingRound;
-            ServerHandlers.ReloadedConfigs += eventHandlers.OnReloadedConfigs;
             ServerHandlers.WaitingForPlayers += eventHandlers.OnWaitingForPlayers;
             base.OnEnabled();
         }
@@ -48,7 +46,6 @@ namespace EndConditions
         public override void OnDisabled()
         {
             ServerHandlers.EndingRound -= eventHandlers.OnEndingRound;
-            ServerHandlers.ReloadedConfigs -= eventHandlers.OnReloadedConfigs;
             ServerHandlers.WaitingForPlayers -= eventHandlers.OnWaitingForPlayers;
             eventHandlers = null;
             Methods = null;

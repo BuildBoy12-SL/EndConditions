@@ -7,6 +7,7 @@
 
 namespace EndConditions
 {
+#pragma warning disable SA1401 // Fields should be private
     using System.ComponentModel;
     using System.IO;
     using EndConditions.Configs;
@@ -14,16 +15,19 @@ namespace EndConditions
     using Exiled.API.Features;
     using Exiled.API.Interfaces;
     using Exiled.Loader;
-    using YamlDotNet.Serialization;
 
-    /// <inheritdoc cref="IConfig"/>
-    public sealed class Config : IConfig
+    /// <inheritdoc />
+    public class Config : IConfig
     {
         /// <summary>
-        /// Gets the config containing the win conditions.
+        /// The config containing the win conditions.
         /// </summary>
-        [YamlIgnore]
-        public WinConditionsConfig WinConditions { get; private set; }
+        public WinConditionsConfig WinConditions;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Config"/> class.
+        /// </summary>
+        public Config() => LoadConditions();
 
         /// <inheritdoc/>
         public bool IsEnabled { get; set; } = true;
